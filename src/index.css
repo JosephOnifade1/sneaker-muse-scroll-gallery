@@ -1,134 +1,66 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
+    --background: 30 12% 6%;
+    --foreground: 40 33% 91%;
+    --card: 30 10% 9%;
+    --card-foreground: 40 33% 91%;
+    --popover: 30 10% 9%;
+    --popover-foreground: 40 33% 91%;
+    --primary: 38 42% 63%;
+    --primary-foreground: 30 12% 6%;
+    --secondary: 30 8% 13%;
+    --secondary-foreground: 40 33% 91%;
+    --muted: 30 8% 13%;
+    --muted-foreground: 35 12% 60%;
+    --accent: 150 28% 22%;
+    --accent-foreground: 40 33% 91%;
+    --burgundy: 350 45% 24%;
+    --ivory: 40 33% 91%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 40 33% 91%;
+    --border: 38 20% 22%;
+    --input: 38 20% 22%;
+    --ring: 38 42% 63%;
+    --radius: 0px;
 
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 5%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
-
-    --accent: 24 100% 50%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 0 0% 9%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 0 0% 9%;
-
-    --chart-1: 24 100% 50%;
-    --chart-2: 0 0% 20%;
-    --chart-3: 0 0% 40%;
-    --chart-4: 0 0% 60%;
-    --chart-5: 0 0% 80%;
-
-    --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
-    --font-serif: 'Libre Caslon Text', ui-serif, Georgia, serif;
-    --font-mono: 'Roboto Mono', ui-monospace, monospace;
-
-    --shadow-glow: 0 0 60px hsl(24 100% 50% / 0.15);
-    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.08);
-    --shadow-card-hover: 0 12px 40px hsl(0 0% 0% / 0.15);
-    --shadow-product: 0 20px 60px hsl(0 0% 0% / 0.25);
-
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 5%) 0%, hsl(0 0% 15%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(24 100% 50%) 0%, hsl(35 100% 55%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
-  }
-
-  .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
-
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-
-    --accent: 24 100% 55%;
-    --accent-foreground: 0 0% 5%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 98%;
-
-    --sidebar-background: 0 0% 8%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 0 0% 9%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 0 0% 98%;
-
-    --chart-1: 24 100% 55%;
-    --chart-2: 0 0% 80%;
-    --chart-3: 0 0% 60%;
-    --chart-4: 0 0% 40%;
-    --chart-5: 0 0% 20%;
-
-    --shadow-glow: 0 0 80px hsl(24 100% 55% / 0.2);
-    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.3);
-    --shadow-card-hover: 0 12px 40px hsl(0 0% 0% / 0.4);
-    --shadow-product: 0 20px 60px hsl(0 0% 0% / 0.5);
-
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 3%) 0%, hsl(0 0% 10%) 100%);
+    --gradient-gold: linear-gradient(120deg, hsl(38 42% 50%), hsl(42 60% 75%), hsl(38 42% 50%));
+    --gradient-vignette: radial-gradient(ellipse at center, hsl(35 20% 14%) 0%, hsl(30 12% 6%) 70%);
+    --shadow-gold: 0 30px 80px -20px hsl(38 42% 50% / 0.35);
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-weight: 300;
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 100;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
+
+@layer utilities {
+  .text-gold {
+    background: var(--gradient-gold);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+  .bg-vignette { background: var(--gradient-vignette); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+  .kicker { @apply font-sans text-[0.68rem] uppercase tracking-[0.35em] text-primary; font-weight: 500; }
+  .preserve-3d { transform-style: preserve-3d; }
+}
+
+@keyframes shimmer { to { background-position: 200% center; } }
+@keyframes marquee { to { transform: translateX(-50%); } }

@@ -1,25 +1,24 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import FeaturedProducts from "@/components/FeaturedProducts";
-import Collections from "@/components/Collections";
-import About from "@/components/About";
+import Marquee from "@/components/Marquee";
+import Anatomy from "@/components/Anatomy";
+import Vault from "@/components/Vault";
+import Heritage from "@/components/Heritage";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 
-const Index = () => {
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>
-        <Hero />
-        <FeaturedProducts />
-        <Collections />
-        <About />
-        <Newsletter />
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
+const Index = () => (
+  <div className="min-h-screen bg-background">
+    <Header />
+    <main>
+      <Hero />
+      <Marquee />
+      <Anatomy />
+      <Vault />
+      <Heritage />
+      <Newsletter />
+    </main>
+    <Footer />
+  </div>
+);
 export default Index;

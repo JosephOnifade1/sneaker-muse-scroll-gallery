@@ -119,8 +119,7 @@ export default {
   		fontFamily: {
   			sans: ['Manrope','ui-sans-serif','sans-serif'],
   			serif: ['Cormorant Garamond','ui-serif','Georgia','serif']
-  		},
-  		colors2: {}
+  		}
   	}
   },
   plugins: [require("tailwindcss-animate")],

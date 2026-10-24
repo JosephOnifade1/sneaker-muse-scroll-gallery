@@ -40,7 +40,7 @@ const Hero = () => {
           <p className="font-serif text-4xl md:text-6xl">Made <em className="text-gold">by hand</em>, never in haste.</p>
         </motion.div>
 
-        <div style={{ perspective: 1400 }} className="relative w-[85vw] max-w-3xl">
+        <div style={{ perspective: 1400 }} className="relative mt-40 w-[80vw] max-w-2xl">
           <motion.div style={{ rotateX: ty, rotateY: tx }} className="preserve-3d">
             <motion.img
               src={shoe} alt="Aurelia Sovereign sneaker in ivory calfskin" width={1536} height={1024}

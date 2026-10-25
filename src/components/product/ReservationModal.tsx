@@ -78,23 +78,23 @@ export const ReservationModal = ({
               </DialogDescription>
             </DialogHeader>
 
-            {/* Selected Summary Card */}
-            <div className="my-5 border border-border bg-secondary/30 p-3.5 flex items-center justify-between text-xs">
+            {/* Summary Card */}
+            <div className="my-5 rounded-2xl border border-border/50 bg-secondary/30 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img
                   src={edition.heroImage}
                   alt={edition.name}
-                  className="h-12 w-12 object-contain bg-background/50 border border-border/80 p-1"
+                  className="h-12 w-12 object-contain rounded-xl bg-background/50 border border-border/40 p-1"
                 />
                 <div>
-                  <p className="font-serif text-base text-foreground">{edition.name}</p>
-                  <p className="text-muted-foreground text-[0.7rem]">{edition.sub}</p>
+                  <p className="font-semibold text-sm text-foreground">{edition.name}</p>
+                  <p className="text-muted-foreground text-xs">{edition.sub}</p>
                 </div>
               </div>
               <div className="text-right">
-                <span className="kicker block text-[0.65rem]">Reserved Size</span>
-                <span className="font-serif text-lg text-primary">
-                  {selectedSize ? `EU ${selectedSize}` : "Not Selected"}
+                <span className="kicker block mb-0.5">Size reserved</span>
+                <span className="font-bold text-lg text-primary">
+                  {selectedSize ? `EU ${selectedSize}` : "Not selected"}
                 </span>
               </div>
             </div>
@@ -102,70 +102,59 @@ export const ReservationModal = ({
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="kicker block text-[0.65rem] mb-1.5 text-muted-foreground">
-                    Client Full Name *
-                  </label>
+                  <label className="kicker block mb-1.5">Full name *</label>
                   <input
                     type="text"
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Lord / Lady / Mr. / Ms."
-                    className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
+                    placeholder="Your name"
+                    className="w-full rounded-xl bg-background border border-border/60 px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="kicker block text-[0.65rem] mb-1.5 text-muted-foreground">
-                    Private Concierge Email *
-                  </label>
+                  <label className="kicker block mb-1.5">Email address *</label>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@domain.com"
-                    className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
+                    className="w-full rounded-xl bg-background border border-border/60 px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="kicker block text-[0.65rem] mb-1.5 text-muted-foreground">
-                    Telephone / WhatsApp
-                  </label>
+                  <label className="kicker block mb-1.5">Phone / WhatsApp</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+39 02 1234 5678"
-                    className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
+                    placeholder="+1 212 000 0000"
+                    className="w-full rounded-xl bg-background border border-border/60 px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="kicker block text-[0.65rem] mb-1.5 text-muted-foreground">
-                    Destination City & Country
-                  </label>
+                  <label className="kicker block mb-1.5">City & country</label>
                   <input
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    placeholder="Milano, Paris, London, NYC..."
-                    className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none transition-colors"
+                    placeholder="Tokyo, Paris, Lagos..."
+                    className="w-full rounded-xl bg-background border border-border/60 px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              {/* Bespoke Personalization: Monogramming */}
-              <div className="border border-border/80 p-3.5 bg-background/50">
-                <div className="flex items-center justify-between mb-1.5">
+              <div className="rounded-xl border border-border/50 bg-background/50 p-4">
+                <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-3.5 w-3.5 text-primary" />
-                    <label className="kicker text-[0.65rem] text-primary">
-                      Complimentary Insole Monogram
-                    </label>
+                    <label className="kicker text-primary">Complimentary insole monogram</label>
                   </div>
-                  <span className="text-[0.65rem] text-muted-foreground italic">Optional · 24kt Gold Foil</span>
+                  <span className="text-[0.65rem] text-muted-foreground">Optional · 24kt gold foil</span>
                 </div>
                 <input
                   type="text"
@@ -173,24 +162,21 @@ export const ReservationModal = ({
                   value={monogram}
                   onChange={(e) => setMonogram(e.target.value.toUpperCase())}
                   placeholder="e.g. J.O. or M.K."
-                  className="w-full bg-card border border-border px-3 py-2 text-sm tracking-widest text-foreground focus:border-primary focus:outline-none font-serif text-center uppercase"
+                  className="w-full rounded-xl bg-card border border-border/60 px-4 py-2.5 text-sm tracking-widest text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none text-center uppercase"
                 />
-                <p className="text-[0.68rem] text-muted-foreground mt-1">
-                  Up to three characters hand-stamped onto the natural veg-tan insole by the master cordwainer.
+                <p className="text-[0.68rem] text-muted-foreground mt-2">
+                  Up to three characters hand-stamped onto the natural veg-tan insole.
                 </p>
               </div>
 
-              {/* Special Concierge Notes */}
               <div>
-                <label className="kicker block text-[0.65rem] mb-1.5 text-muted-foreground">
-                  Special Notes or Fitting Instructions
-                </label>
+                <label className="kicker block mb-1.5">Notes or fitting instructions</label>
                 <textarea
                   rows={2}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Foot width notes, preferred delivery time, or private salon fitting in Brera..."
-                  className="w-full bg-background border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none transition-colors resize-none"
+                  placeholder="Foot width, preferred delivery window, or any special requests..."
+                  className="w-full rounded-xl bg-background border border-border/60 px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all resize-none"
                 />
               </div>
 
@@ -209,13 +195,13 @@ export const ReservationModal = ({
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full mt-4 flex items-center justify-center gap-2 border border-primary bg-primary text-primary-foreground py-3.5 px-6 font-sans text-xs uppercase tracking-[0.25em] font-semibold hover:bg-primary/90 transition-all shadow-gold disabled:opacity-60"
+                className="w-full mt-4 rounded-2xl bg-primary text-primary-foreground py-4 px-6 font-semibold text-sm hover:shadow-gold hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
               >
                 {isSubmitting ? (
-                  <span>Transmitting to Milano Atelier...</span>
+                  <span>Confirming allocation...</span>
                 ) : (
                   <>
-                    <span>Submit Allocation Request</span>
+                    <span>Submit allocation request</span>
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -230,41 +216,40 @@ export const ReservationModal = ({
             </div>
 
             <div>
-              <p className="kicker text-primary mb-2">Bespoke Allocation Registered</p>
-              <h3 className="font-serif text-3xl font-normal text-foreground">
-                Maison Aurelia Milano
+              <p className="kicker text-primary mb-2">Allocation confirmed</p>
+              <h3 className="font-display text-2xl font-black text-foreground">
+                You're in, {fullName.split(" ")[0]}.
               </h3>
-              <p className="text-muted-foreground text-xs font-sans mt-2 max-w-md mx-auto leading-relaxed">
-                Thank you, <span className="text-foreground font-medium">{fullName}</span>. Your provisional allocation for{" "}
-                <span className="text-foreground font-medium">{edition.name}</span> in size{" "}
-                <span className="text-foreground font-medium">EU {selectedSize}</span> has been logged with the atelier director.
+              <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto leading-relaxed">
+                Your allocation for{" "}
+                <span className="text-foreground font-semibold">{edition.name}</span> in size{" "}
+                <span className="text-foreground font-semibold">EU {selectedSize}</span> is confirmed. Our team will email you within 24 hours.
               </p>
             </div>
 
-            {/* Certificate Box */}
-            <div className="border border-primary/40 bg-secondary/30 p-5 text-left relative overflow-hidden">
-              <div className="absolute right-3 top-3 opacity-10 font-serif text-6xl text-primary pointer-events-none">
-                MCMXXIV
+            <div className="rounded-2xl border border-primary/30 bg-secondary/30 p-5 text-left relative overflow-hidden">
+              <div className="absolute right-3 top-3 opacity-8 font-display text-5xl font-black text-primary pointer-events-none select-none">
+                KI
               </div>
-              <div className="flex justify-between items-center text-[0.68rem] text-muted-foreground uppercase tracking-widest border-b border-border/80 pb-2 mb-3">
-                <span>Certificate of Provision</span>
-                <span className="text-primary">{edition.editionNumber}</span>
+              <div className="flex justify-between items-center text-xs text-muted-foreground border-b border-border/40 pb-3 mb-3">
+                <span className="font-medium">Certificate of provision</span>
+                <span className="text-primary font-medium">{edition.editionNumber}</span>
               </div>
-              <div className="space-y-1.5 text-xs font-sans">
+              <div className="space-y-1.5 text-xs">
                 <p className="text-muted-foreground">
                   Reference:{" "}
-                  <code className="text-primary font-mono text-sm select-all">
+                  <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-sm select-all">
                     {certificateId}
                   </code>
                 </p>
                 <p className="text-muted-foreground">
-                  Cordwainer Bench:{" "}
-                  <span className="text-foreground">{edition.provenance.cordwainer}</span>
+                  Cordwainer:{" "}
+                  <span className="text-foreground font-medium">{edition.provenance.cordwainer}</span>
                 </p>
                 {monogram && (
                   <p className="text-muted-foreground">
-                    Custom Monogram:{" "}
-                    <span className="text-primary font-serif tracking-widest">
+                    Monogram:{" "}
+                    <span className="text-primary font-bold tracking-widest">
                       "{monogram}"
                     </span>
                   </p>
@@ -273,10 +258,10 @@ export const ReservationModal = ({
 
               <button
                 onClick={handleCopyCert}
-                className="mt-4 flex items-center gap-1.5 border border-border px-2.5 py-1 text-[0.68rem] kicker text-muted-foreground hover:text-primary hover:border-primary transition"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border/60 px-3 py-1.5 text-xs text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
               >
                 <Copy className="h-3 w-3" />
-                <span>Copy Certificate Reference</span>
+                <span>Copy reference</span>
               </button>
             </div>
 
@@ -291,9 +276,9 @@ export const ReservationModal = ({
 
             <button
               onClick={handleResetAndClose}
-              className="w-full border border-border py-3 text-xs kicker hover:border-primary text-foreground transition"
+              className="w-full rounded-2xl border border-border/50 py-3 text-sm font-medium hover:border-primary/50 text-muted-foreground hover:text-foreground transition-all"
             >
-              Return to Edition
+              Close
             </button>
           </div>
         )}

@@ -2,13 +2,22 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+export type SneakerVariant = "noir" | "dune" | "slate" | "midnight" | "beach" | "street" | "ivory" | "green" | "oxblood";
+
+export function normalizeVariant(v: string): "noir" | "dune" | "slate" {
+  if (v === "dune" || v === "beach" || v === "ivory" || v === "green") return "dune";
+  if (v === "slate" || v === "street" || v === "oxblood") return "slate";
+  return "noir";
+}
+
 interface Sneaker3DCanvasProps {
   scrollProgress?: number; // 0 to 1, smoothed
   mouseX?: number; // -1 to 1
   mouseY?: number; // -1 to 1
   className?: string;
-  variant?: "ivory" | "green" | "oxblood";
+  variant?: SneakerVariant;
   interactive?: boolean;
+  mode?: "hero" | "anatomy" | "orbit";
 }
 
 export const Sneaker3DCanvas = ({
@@ -16,8 +25,9 @@ export const Sneaker3DCanvas = ({
   mouseX = 0,
   mouseY = 0,
   className = "",
-  variant = "ivory",
+  variant = "dune",
   interactive = true,
+  mode = "hero",
 }: Sneaker3DCanvasProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,13 +42,13 @@ export const Sneaker3DCanvas = ({
   const pivotRef = useRef<THREE.Group | null>(null);
   const animationFrameId = useRef<number | null>(null);
 
-  // Materials Cache for dynamic colorway switching
-  const materialsCache = useRef<Record<"ivory" | "green" | "oxblood", THREE.MeshStandardMaterial | null>>({
-    ivory: null,
-    green: null,
-    oxblood: null,
+  // Materials Cache for dynamic colorway switching (using native GLTF materials)
+  const materialsCache = useRef<Record<"noir" | "dune" | "slate", THREE.MeshStandardMaterial | null>>({
+    noir: null,
+    dune: null,
+    slate: null,
   });
-  const currentVariantRef = useRef<"ivory" | "green" | "oxblood">(variant);
+  const currentVariantRef = useRef<"noir" | "dune" | "slate">(normalizeVariant(variant));
 
   // Drag interaction state
   const isDragging = useRef(false);
@@ -57,45 +67,60 @@ export const Sneaker3DCanvas = ({
 
   // Update target physics every time scrollProgress or mouseX/mouseY changes
   useEffect(() => {
-    // 1. Precise 2D-matched scroll progression
+function lerpKeys(v: number, inKeys: number[], outKeys: number[]): number {
+  if (v <= inKeys[0]) return outKeys[0];
+  if (v >= inKeys[inKeys.length - 1]) return outKeys[outKeys.length - 1];
+  for (let i = 0; i < inKeys.length - 1; i++) {
+    if (v >= inKeys[i] && v <= inKeys[i + 1]) {
+      const t = (v - inKeys[i]) / (inKeys[i + 1] - inKeys[i]);
+      return outKeys[i] + t * (outKeys[i + 1] - outKeys[i]);
+    }
+  }
+  return outKeys[0];
+}
+
+    // 1. Calculate scroll progression based on mode (hero / anatomy / orbit)
     // p goes from 0 to 1
     const p = Math.max(0, Math.min(1, scrollProgress));
-
-    // Y rotation: from -25 deg to 340 deg (full 360-degree exhibition)
-    const baseRotYDeg = -25 + p * (340 - -25);
-
-    // X rotation (pitch): from 18 deg -> -10 deg at mid-scroll -> 25 deg at bottom
+    let baseRotYDeg: number;
     let baseRotXDeg: number;
-    if (p <= 0.5) {
-      const t = p / 0.5;
-      baseRotXDeg = 18 + t * (-10 - 18);
-    } else {
-      const t = (p - 0.5) / 0.5;
-      baseRotXDeg = -10 + t * (25 - -10);
-    }
-
-    // Z rotation (bank): from -12 deg -> 6 deg -> -20 deg
     let baseRotZDeg: number;
-    if (p <= 0.5) {
-      const t = p / 0.5;
-      baseRotZDeg = -12 + t * (6 - -12);
-    } else {
-      const t = (p - 0.5) / 0.5;
-      baseRotZDeg = 6 + t * (-20 - 6);
-    }
-
-    // Scale: from 1.0 -> 1.25 -> 0.65
     let scaleVal: number;
-    if (p <= 0.5) {
-      const t = p / 0.5;
-      scaleVal = 1.0 + t * (1.28 - 1.0);
-    } else {
-      const t = (p - 0.5) / 0.5;
-      scaleVal = 1.28 + t * (0.65 - 1.28);
-    }
+    let yVal: number;
 
-    // Vertical Y displacement (in Three.js world units)
-    const yVal = -p * 0.35;
+    if (mode === "anatomy") {
+      // Precise anatomical motion mirroring the 4 craft stages:
+      // Step I (p=0): Lateral view of the upper calfskin
+      // Step II (p=0.33): Heel counter & serial stamp turns forward
+      // Step III (p=0.66): Blake welt & stitch line tilts forward
+      // Step IV (p=1.0): Gum sole tilts up dramatically to expose tread
+      baseRotYDeg = lerpKeys(p, [0, 0.33, 0.66, 1], [0, -42, 24, 0]);
+      baseRotXDeg = lerpKeys(p, [0, 0.5, 1], [-8, -32, -62]);
+      baseRotZDeg = lerpKeys(p, [0, 0.33, 0.66, 1], [0, 8, -6, 0]);
+      scaleVal = lerpKeys(p, [0, 0.5, 1], [1.02, 1.20, 1.10]);
+      yVal = lerpKeys(p, [0, 0.5, 1], [0, -0.05, 0.06]);
+    } else if (mode === "orbit") {
+      baseRotYDeg = -15;
+      baseRotXDeg = -8;
+      baseRotZDeg = 0;
+      scaleVal = 1.05;
+      yVal = 0;
+    } else {
+      // "hero" full 360-degree exhibition mode
+      baseRotYDeg = -25 + p * (340 - -25);
+      if (p <= 0.5) {
+        const t = p / 0.5;
+        baseRotXDeg = 18 + t * (-10 - 18);
+        baseRotZDeg = -12 + t * (6 - -12);
+        scaleVal = 1.0 + t * (1.28 - 1.0);
+      } else {
+        const t = (p - 0.5) / 0.5;
+        baseRotXDeg = -10 + t * (25 - -10);
+        baseRotZDeg = 6 + t * (-20 - 6);
+        scaleVal = 1.28 + t * (0.65 - 1.28);
+      }
+      yVal = -p * 0.35;
+    }
 
     // 2. High-fidelity Mouse Parallax Tilt (like Framer Motion spring)
     // mouseX: -1 (left) to 1 (right) -> tilts Y (yaw) and Z (roll)
@@ -111,12 +136,13 @@ export const Sneaker3DCanvas = ({
     };
     targetScale.current = scaleVal;
     targetY.current = yVal;
-  }, [scrollProgress, mouseX, mouseY]);
+  }, [scrollProgress, mouseX, mouseY, mode]);
 
   // Apply chosen colorway material & accent illumination
-  const applyVariantMaterial = (v: "ivory" | "green" | "oxblood") => {
-    currentVariantRef.current = v;
-    const targetMat = materialsCache.current[v];
+  const applyVariantMaterial = (v: string) => {
+    const norm = normalizeVariant(v);
+    currentVariantRef.current = norm;
+    const targetMat = materialsCache.current[norm];
     if (targetMat) {
       shoeMeshesRef.current.forEach((mesh) => {
         mesh.material = targetMat;
@@ -124,12 +150,15 @@ export const Sneaker3DCanvas = ({
       targetMat.needsUpdate = true;
     }
     if (rimLightRef.current) {
-      if (v === "green") {
-        rimLightRef.current.color.setHex(0xd4af37);
-      } else if (v === "oxblood") {
-        rimLightRef.current.color.setHex(0xe88a6d);
+      if (norm === "noir") {
+        rimLightRef.current.color.setHex(0x38bdf8); // electric stealth cyan
+        rimLightRef.current.intensity = 4.2;
+      } else if (norm === "dune") {
+        rimLightRef.current.color.setHex(0xf59e0b); // warm cyber amber
+        rimLightRef.current.intensity = 4.5;
       } else {
-        rimLightRef.current.color.setHex(0xe5b85c);
+        rimLightRef.current.color.setHex(0xe2e8f0); // titanium ice
+        rimLightRef.current.intensity = 4.0;
       }
     }
   };
@@ -170,12 +199,12 @@ export const Sneaker3DCanvas = ({
 
     container.appendChild(renderer.domElement);
 
-    // 4. Lighting Setup tailored for Italian atelier leather
-    const ambientLight = new THREE.AmbientLight(0xfff5ea, 1.4);
+    // 4. Lighting Setup tailored for architectural tech footwear
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.3);
     scene.add(ambientLight);
 
-    // Main Key Light (Warm ivory illumination from front-top-right)
-    const keyLight = new THREE.DirectionalLight(0xfff2e0, 3.5);
+    // Main Key Light (Crisp neutral daylight from front-top-right)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.6);
     keyLight.position.set(4, 5, 4);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
@@ -183,25 +212,25 @@ export const Sneaker3DCanvas = ({
     keyLight.shadow.bias = -0.0005;
     scene.add(keyLight);
 
-    // Gold Luxury Rim Light (Striking back rim reflection on leather edges)
-    const rimLight = new THREE.DirectionalLight(0xe5b85c, 4.0);
+    // Dynamic Rim Light (Accent reflection on chassis edges)
+    const rimLight = new THREE.DirectionalLight(0xf59e0b, 4.2);
     rimLight.position.set(-4, 3, -3);
     rimLightRef.current = rimLight;
     scene.add(rimLight);
 
-    // Fill Light (Gentle reflection from below so gum sole details pop)
-    const fillLight = new THREE.DirectionalLight(0xc4a480, 1.2);
+    // Fill Light (Subtle upward reflection so decoupled outsole geometry pops)
+    const fillLight = new THREE.DirectionalLight(0x94a3b8, 1.4);
     fillLight.position.set(0, -3, 3);
     scene.add(fillLight);
 
-    // Point Light for leather glint
-    const glintLight = new THREE.PointLight(0xffffff, 1.5, 6);
+    // Point Light for high-tech specularity glint
+    const glintLight = new THREE.PointLight(0xffffff, 1.8, 6);
     glintLight.position.set(0, 2, 2);
     scene.add(glintLight);
 
     // 5. Soft Ground Contact Shadow
     const shadowGeo = new THREE.PlaneGeometry(3.5, 3.5);
-    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.45 });
+    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.55 });
     const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
     shadowPlane.rotation.x = -Math.PI / 2;
     shadowPlane.position.y = -0.58;
@@ -248,49 +277,42 @@ export const Sneaker3DCanvas = ({
           shoeMeshRef.current = meshes[0];
         }
 
-        // Initialize materials for each edition variant:
-        // 0: Midnight, 1: Beach, 2: Street
+        // Initialize native GLTF materials:
+        // 0: Midnight (Noir), 1: Beach (Dune), 2: Street (Slate)
         if (gltf.parser) {
           Promise.all([
             gltf.parser.getDependency("material", 0),
             gltf.parser.getDependency("material", 1),
             gltf.parser.getDependency("material", 2),
           ]).then(([midnightMat, beachMat, streetMat]: [THREE.Material, THREE.Material, THREE.Material]) => {
-            const baseBeach = (beachMat || midnightMat) as THREE.MeshStandardMaterial;
-            const baseMidnight = (midnightMat || beachMat) as THREE.MeshStandardMaterial;
-            const baseStreet = (streetMat || beachMat) as THREE.MeshStandardMaterial;
-
-            // 1. Ivory (The Sovereign - French calfskin & amber gum)
-            if (baseBeach) {
-              const ivoryMat = baseBeach.clone();
-              ivoryMat.color.setHex(0xfcf8f2);
-              ivoryMat.roughness = 0.44;
-              ivoryMat.metalness = 0.08;
-              ivoryMat.envMapIntensity = 1.4;
-              ivoryMat.needsUpdate = true;
-              materialsCache.current.ivory = ivoryMat;
+            // 1. NOIR (Carbon Stealth & Ballistic Mesh)
+            if (midnightMat) {
+              const mat = (midnightMat as THREE.MeshStandardMaterial).clone();
+              mat.roughness = 0.5;
+              mat.metalness = 0.15;
+              mat.envMapIntensity = 1.5;
+              mat.needsUpdate = true;
+              materialsCache.current.noir = mat;
             }
 
-            // 2. Green (The Regatta - British racing green velour suede)
-            if (baseBeach || baseStreet) {
-              const greenMat = (baseBeach || baseStreet).clone();
-              greenMat.color.setRGB(0.12, 0.28, 0.18);
-              greenMat.roughness = 0.78; // suede tactile nap
-              greenMat.metalness = 0.02;
-              greenMat.envMapIntensity = 0.95;
-              greenMat.needsUpdate = true;
-              materialsCache.current.green = greenMat;
+            // 2. DUNE (Desert Sandstone & Dune Nubuck)
+            if (beachMat) {
+              const mat = (beachMat as THREE.MeshStandardMaterial).clone();
+              mat.roughness = 0.45;
+              mat.metalness = 0.08;
+              mat.envMapIntensity = 1.4;
+              mat.needsUpdate = true;
+              materialsCache.current.dune = mat;
             }
 
-            // 3. Oxblood (The Chancellor - Museum box calf & smoked sole)
-            if (baseBeach || baseMidnight) {
-              const oxbloodMat = (baseBeach || baseMidnight).clone();
-              oxbloodMat.color.setRGB(0.32, 0.08, 0.14);
-              oxbloodMat.roughness = 0.32; // high-luster polished calfskin
-              oxbloodMat.metalness = 0.14;
-              oxbloodMat.envMapIntensity = 1.6;
-              oxbloodMat.needsUpdate = true;
-              materialsCache.current.oxblood = oxbloodMat;
+            // 3. SLATE (Industrial Slate & High-Tension Cyber Mesh)
+            if (streetMat) {
+              const mat = (streetMat as THREE.MeshStandardMaterial).clone();
+              mat.roughness = 0.48;
+              mat.metalness = 0.18;
+              mat.envMapIntensity = 1.6;
+              mat.needsUpdate = true;
+              materialsCache.current.slate = mat;
             }
 
             applyVariantMaterial(currentVariantRef.current);
@@ -410,11 +432,14 @@ export const Sneaker3DCanvas = ({
     isDragging.current = false;
   };
 
-  const variantTitles: Record<"ivory" | "green" | "oxblood", string> = {
-    ivory: "The Sovereign (Ivory Calf)",
-    green: "The Regatta (Racing Green)",
-    oxblood: "The Chancellor (Oxblood)",
+  const variantTitles: Record<"noir" | "dune" | "slate", string> = {
+    noir: "PROTO-01 // NOIR (Carbon Stealth)",
+    dune: "PROTO-01 // DUNE (Sandstone Nubuck)",
+    slate: "PROTO-01 // SLATE (Titanium Matrix)",
   };
+
+  const activeNorm = normalizeVariant(variant);
+  const activeLabel = mode === "anatomy" ? "KINETIC ANATOMY // CAD VIEW" : variantTitles[activeNorm];
 
   return (
     <div
@@ -434,15 +459,15 @@ export const Sneaker3DCanvas = ({
       {isLoading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none z-10">
           <div className="h-7 w-7 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <span className="kicker text-[0.62rem] text-primary/80">Loading {variantTitles[variant]} 3D Last...</span>
+          <span className="kicker text-[0.62rem] text-primary/80">INITIALIZING 3D ENGINE // {variantTitles[activeNorm]}...</span>
         </div>
       )}
 
       {/* Floating 3D Badge */}
       {!isLoading && (
-        <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center gap-1.5 border border-primary/30 bg-background/70 px-2.5 py-1 text-[0.62rem] backdrop-blur kicker text-primary">
+        <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center gap-2 border border-border bg-card/80 px-2.5 py-1 text-[0.62rem] backdrop-blur font-mono text-foreground/90">
           <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-          <span>3D Last · {variantTitles[variant]}</span>
+          <span className="tracking-wider uppercase">{activeLabel}</span>
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -35,8 +36,6 @@ export default {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'
   			},
-  			burgundy: 'hsl(var(--burgundy))',
-  			ivory: 'hsl(var(--ivory))',
   			accent: {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
@@ -49,78 +48,43 @@ export default {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
-  			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			md: 'calc(var(--radius) - 4px)',
+  			sm: 'calc(var(--radius) - 8px)',
+  			xl: 'calc(var(--radius) + 4px)',
+  			'2xl': 'calc(var(--radius) + 8px)',
+  			full: '9999px',
   		},
 		keyframes: {
 			'accordion-down': {
-				from: {
-					height: '0'
-				},
-				to: {
-					height: 'var(--radix-accordion-content-height)'
-				}
+				from: { height: '0' },
+				to: { height: 'var(--radix-accordion-content-height)' }
 			},
 			'accordion-up': {
-				from: {
-					height: 'var(--radix-accordion-content-height)'
-				},
-				to: {
-					height: '0'
-				}
+				from: { height: 'var(--radix-accordion-content-height)' },
+				to: { height: '0' }
 			},
-			'fade-in': {
-				'0%': {
-					opacity: '0',
-					transform: 'translateY(10px)'
-				},
-				'100%': {
-					opacity: '1',
-					transform: 'translateY(0)'
-				}
+			'pulse-slow': {
+				'0%, 100%': { opacity: '1' },
+				'50%': { opacity: '0.4' },
 			},
-			'float': {
-				'0%, 100%': {
-					transform: 'translateY(0)'
-				},
-				'50%': {
-					transform: 'translateY(-20px)'
-				}
-			}
 		},
 		animation: {
 			'accordion-down': 'accordion-down 0.2s ease-out',
 			'accordion-up': 'accordion-up 0.2s ease-out',
-			'fade-in': 'fade-in 0.6s ease-out forwards',
-			'float': 'float 6s ease-in-out infinite'
+			'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
 		},
-  		boxShadow: {
-  			'2xs': 'var(--shadow-2xs)',
-  			xs: 'var(--shadow-xs)',
-  			sm: 'var(--shadow-sm)',
-  			md: 'var(--shadow-md)',
-  			lg: 'var(--shadow-lg)',
-  			xl: 'var(--shadow-xl)',
-  			'2xl': 'var(--shadow-2xl)'
-  		},
   		fontFamily: {
-  			sans: ['Manrope','ui-sans-serif','sans-serif'],
-  			serif: ['Cormorant Garamond','ui-serif','Georgia','serif']
+  			sans: ['Inter', 'DM Sans', 'system-ui', 'sans-serif'],
+  			display: ['Syne', 'Space Grotesk', 'sans-serif'],
+  			grotesk: ['Space Grotesk', 'sans-serif'],
+  			mono: ['JetBrains Mono', 'SFMono-Regular', 'Menlo', 'monospace'],
+  			serif: ['Syne', 'Space Grotesk', 'sans-serif'],
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;
+

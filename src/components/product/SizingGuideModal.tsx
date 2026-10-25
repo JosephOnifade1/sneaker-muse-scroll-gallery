@@ -23,15 +23,15 @@ export const SizingGuideModal = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-2xl bg-card border-border text-foreground max-h-[90vh] overflow-y-auto">
         <DialogHeader className="border-b border-border pb-4">
-          <div className="flex items-center gap-2 text-primary kicker">
+          <div className="flex items-center gap-2 text-primary kicker font-mono text-xs">
             <Ruler className="h-4 w-4" />
-            <span>Atelier Sizing & Bespoke Lasts</span>
+            <span>// BIOMECHANICAL LASTS & CALIBRATION</span>
           </div>
-          <DialogTitle className="font-serif text-3xl font-normal mt-1">
-            MCMXXIV Sizing Guide
+          <DialogTitle className="font-mono text-2xl font-bold uppercase mt-1">
+            PROTO-01 Sizing Guide
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-sm font-sans">
-            Aurelia lasts are sculpted in beechwood following classical Northern Italian cobbler proportions.
+          <DialogDescription className="text-muted-foreground text-xs font-sans">
+            KINESIS lasts are computationally modeled using laser-scanned ergonomic volumetric data with a 0.08mm structural tolerance.
           </DialogDescription>
         </DialogHeader>
 

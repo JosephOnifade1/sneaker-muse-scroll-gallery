@@ -8,10 +8,10 @@ interface ProductGalleryProps {
   items: GalleryItem[];
   shoeName: string;
   editionNumber: string;
-  variant?: "ivory" | "green" | "oxblood";
+  variant?: "ivory" | "green" | "oxblood" | "noir" | "dune" | "slate";
 }
 
-export const ProductGallery = ({ items, shoeName, editionNumber, variant = "ivory" }: ProductGalleryProps) => {
+export const ProductGallery = ({ items, shoeName, editionNumber, variant = "noir" }: ProductGalleryProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [is3DMode, setIs3DMode] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -91,6 +91,7 @@ export const ProductGallery = ({ items, shoeName, editionNumber, variant = "ivor
             <Sneaker3DCanvas
               interactive={true}
               variant={variant}
+              mode="orbit"
               className="h-full w-full"
             />
           </div>

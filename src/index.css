@@ -1,36 +1,35 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 30 12% 6%;
-    --foreground: 40 33% 91%;
-    --card: 30 10% 9%;
-    --card-foreground: 40 33% 91%;
-    --popover: 30 10% 9%;
-    --popover-foreground: 40 33% 91%;
-    --primary: 38 42% 63%;
-    --primary-foreground: 30 12% 6%;
-    --secondary: 30 8% 13%;
-    --secondary-foreground: 40 33% 91%;
-    --muted: 30 8% 13%;
-    --muted-foreground: 35 12% 60%;
-    --accent: 150 28% 22%;
-    --accent-foreground: 40 33% 91%;
-    --burgundy: 350 45% 24%;
-    --ivory: 40 33% 91%;
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 40 33% 91%;
-    --border: 38 20% 22%;
-    --input: 38 20% 22%;
-    --ring: 38 42% 63%;
-    --radius: 0px;
+    --background: 228 24% 4%;
+    --foreground: 210 30% 96%;
+    --card: 224 22% 7%;
+    --card-foreground: 210 30% 96%;
+    --popover: 224 22% 7%;
+    --popover-foreground: 210 30% 96%;
+    --primary: 38 95% 55%;
+    --primary-foreground: 228 24% 4%;
+    --secondary: 224 18% 11%;
+    --secondary-foreground: 210 30% 96%;
+    --muted: 224 18% 11%;
+    --muted-foreground: 215 14% 56%;
+    --accent: 220 18% 15%;
+    --accent-foreground: 210 30% 96%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 30% 96%;
+    --border: 224 16% 14%;
+    --input: 224 16% 14%;
+    --ring: 38 95% 55%;
+    --radius: 12px;
 
-    --gradient-gold: linear-gradient(120deg, hsl(38 42% 50%), hsl(42 60% 75%), hsl(38 42% 50%));
-    --gradient-vignette: radial-gradient(ellipse at center, hsl(35 20% 14%) 0%, hsl(30 12% 6%) 70%);
-    --shadow-gold: 0 30px 80px -20px hsl(38 42% 50% / 0.35);
+    --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fef08a 50%, #d97706 100%);
+    --gradient-vignette: radial-gradient(ellipse at 50% 40%, hsl(224 22% 8%) 0%, hsl(228 24% 4%) 80%);
+    --shadow-gold: 0 20px 50px -12px rgba(245, 158, 11, 0.3);
+    --shadow-glow: 0 0 40px rgba(245, 158, 11, 0.08);
   }
 }
 
@@ -38,14 +37,22 @@
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-weight: 300;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.015em;
   }
-  body::after {
+  /* Subtle film grain overlay */
+  body::before {
     content: "";
     position: fixed; inset: 0; pointer-events: none; z-index: 100;
-    opacity: 0.06;
+    opacity: 0.025;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  h1, h2, h3 {
+    font-family: 'Syne', 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
   }
 }
 
@@ -54,13 +61,31 @@
     background: var(--gradient-gold);
     background-size: 200% auto;
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: shimmer 6s linear infinite;
   }
   .bg-vignette { background: var(--gradient-vignette); }
   .shadow-gold { box-shadow: var(--shadow-gold); }
-  .kicker { @apply font-sans text-[0.68rem] uppercase tracking-[0.35em] text-primary; font-weight: 500; }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  /* Micro label: compact, readable, no aggressive mono */
+  .kicker {
+    @apply text-xs uppercase tracking-[0.18em] text-primary font-semibold;
+    font-family: 'Space Grotesk', sans-serif;
+  }
   .preserve-3d { transform-style: preserve-3d; }
+  /* Subtle dot grid — not overwhelming */
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  /* Pill button base */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-300 hover:shadow-gold hover:scale-[1.02] active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-border bg-transparent text-foreground px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-300 hover:border-primary/60 hover:text-primary hover:bg-primary/5;
+  }
 }
 
-@keyframes shimmer { to { background-position: 200% center; } }
-@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

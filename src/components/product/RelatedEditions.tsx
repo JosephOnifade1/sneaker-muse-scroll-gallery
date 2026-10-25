@@ -14,14 +14,14 @@ export const RelatedEditions = ({ currentId }: RelatedEditionsProps) => {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
           <div>
-            <p className="kicker mb-2">The Aurelia Archive</p>
-            <h2 className="font-serif text-3xl sm:text-4xl">Companion Allocations</h2>
+            <p className="kicker mb-2 font-mono text-primary text-[0.65rem] tracking-[0.25em]">[SPECIMEN ARCHIVE]</p>
+            <h2 className="font-mono text-2xl sm:text-3xl font-bold uppercase tracking-tight text-foreground">Companion Allocations</h2>
           </div>
           <Link
             to="/#vault"
-            className="kicker mt-4 sm:mt-0 text-muted-foreground hover:text-primary transition flex items-center gap-1"
+            className="kicker mt-4 sm:mt-0 text-muted-foreground hover:text-primary transition flex items-center gap-1 font-mono text-xs"
           >
-            <span>View Complete Vault</span>
+            <span>View All Specimens</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </div>

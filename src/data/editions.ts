@@ -4,6 +4,7 @@ import shoeBurgundy from "@/assets/shoe-burgundy.png";
 import atelier from "@/assets/atelier.jpg";
 import detailSole from "@/assets/detail-sole.jpg";
 import detailStamp from "@/assets/detail-stamp.jpg";
+import type { SneakerVariant } from "@/components/Sneaker3DCanvas";
 
 export interface GalleryItem {
   id: string;
@@ -27,7 +28,7 @@ export interface SizeOption {
   uk: number;
   cm: number;
   inches: number;
-  stock: number; // remaining allocation for this size
+  stock: number;
 }
 
 export interface Edition {
@@ -44,6 +45,7 @@ export interface Edition {
   vintage: string;
   status: "Allocating" | "Few Remaining" | "Reserve Only";
   colorway: string;
+  variant: "noir" | "dune" | "slate";
   headline: string;
   overview: string;
   story: string[];
@@ -72,110 +74,111 @@ export interface Edition {
 
 export const EDITIONS: Edition[] = [
   {
-    id: "the-sovereign",
-    slug: "the-sovereign",
-    name: "The Sovereign",
-    sub: "Ivory calf · Gum",
-    price: "€ 890",
-    priceRaw: 890,
-    editionNumber: "No. 041 / 350",
+    id: "proto-01-noir",
+    slug: "proto-01-noir",
+    name: "PROTO-01 // NOIR",
+    sub: "Stealth Carbon & Ballistic Mesh",
+    price: "$ 680",
+    priceRaw: 680,
+    editionNumber: "SPECIMEN // 041 OF 250",
     currentPiece: 41,
-    totalPieces: 350,
-    series: "Series VII · 350 Pairs Worldwide",
-    vintage: "MCMXXIV Autumn Allocation",
+    totalPieces: 250,
+    series: "Series I · Parametric Footwear Lab",
+    vintage: "DROP 01 // AUTUMN CYBER MATRIX",
     status: "Allocating",
-    colorway: "Ivory Bianco · Cognac Counter · Amber Gum",
-    headline: "The quiet benchmark of understated Milanese proportions.",
+    colorway: "Matte Carbon · Technical Mesh · Decoupled Rubber",
+    variant: "noir",
+    headline: "Engineered stealth architecture designed for low-drag urban kinetic movement.",
     overview:
-      "Crafted from 1.6mm full-grain French calfskin from Tanneries d'Annonay, aged for forty days before cutting. The Sovereign balances athletic ease with the strict bespoke silhouette of a Savile Row brogue.",
+      "A study in aerodynamic load distribution. The PROTO-01 Noir pairs a high-modulus thermo-molded outer cage with three-dimensional spacer mesh to maximize torsional rigidity while shaving tare weight to 385 grams.",
     story: [
-      "The Sovereign was conceived not as sportswear, but as the quiet shoe for individuals who refuse loud branding. Each skin is inspected under raking morning light in our Brera atelier; fewer than one in twelve hides meets our grain density threshold.",
-      "The upper is hand-burnished using bee-propolis wax over a heated boxwood bone, giving the ivory surface a warm, parchment-like translucency that patinas with the wearer's gait.",
-      "Underneath, a Civitanova Marche natural gum sole is joined to the upper via an unbroken 360-degree Blake stitch, ensuring the sneaker can be rebuilt repeatedly in our workshop over decades."
+      "Engineered through computational generative algorithms, the Noir chassis eliminates unnecessary material volume, placing reinforcement ribs exclusively along high-strain muscular vectors.",
+      "The ballistic mesh core permits 360-degree cross-laminar airflow, maintaining optimal thermal equilibrium under prolonged high-cadence walking.",
+      "Underneath, the decoupled dual-compound outsole features multi-directional siping for razor-sharp mechanical grip on wet asphalt, polished granite, and urban surfaces."
     ],
     heroImage: heroShoe,
     gallery: [
       {
         id: "hero-profile",
-        title: "Lateral Profile",
-        subtitle: "Sculpted arch with tapered forefoot",
+        title: "Chassis Lateral Profile",
+        subtitle: "Parametric composite lattice with tapered forefoot",
         src: heroShoe
       },
       {
         id: "heel-stamp",
-        title: "Heel Counter & Serial",
-        subtitle: "24kt gold foil hot-stamped edition archive number",
+        title: "Heel Stabilizer & Telemetry",
+        subtitle: "Integrated external TPU heel cage with laser-etched serial",
         src: detailStamp
       },
       {
         id: "sole-stitch",
-        title: "Blake Welt & Tread",
-        subtitle: "Civitanova Marche natural amber gum with 11-spi wax stitch",
+        title: "Decoupled Traction Matrix",
+        subtitle: "Dual-density high-abrasion rubber with siped flex channels",
         src: detailSole
       },
       {
         id: "atelier-bench",
-        title: "The Cobbler's Bench",
-        subtitle: "Hand-lasted and finished on Via Fiori Chiari, Milano",
+        title: "Computational Laboratory",
+        subtitle: "Precision bonded and hand-finished in our engineering atelier",
         src: atelier
       }
     ],
     materials: {
       upper: {
-        title: "French Full-Grain Calfskin",
-        origin: "Tanneries d'Annonay, Rhône-Alpes, France",
-        tannery: "Annonay Box-Calf Selection A+",
-        badge: "1.6mm Gauge",
+        title: "Carbon Lattice & Ballistic Mesh",
+        origin: "Toray Composites, Japan",
+        tannery: "Spec Tech Lab R&D",
+        badge: "High-Tensile Lattice",
         description:
-          "Sourced exclusively from alpine heifers. Vegetable retanned for 40 days to retain natural tensile memory and subtle micro-pebble grain."
+          "Reinforced multi-filament ballistic spacer mesh encapsulated within a flexible thermo-molded polyurethane skeleton."
       },
       lining: {
-        title: "Un-dyed Butter-Soft Calf Lining",
-        origin: "Arzignano, Veneto, Italy",
-        tannery: "Mastrotto Veg-Tan Reserve",
-        badge: "Hypoallergenic",
+        title: "Micro-Porous Bio-Synthetic Membrane",
+        origin: "Zurich, Switzerland",
+        tannery: "Swiss Performance Fabrics",
+        badge: "Moisture-Wicking",
         description:
-          "Glove-grade calfskin lining that breathes naturally and contours to the unique temperature and pressure points of your foot."
+          "Seamless inner bootie construction that contours naturally to foot geometry while expelling heat and sweat instantly."
       },
       sole: {
-        title: "Natural Amber Gum Cupsole",
-        origin: "Civitanova Marche, Italy",
-        tannery: "Artisanal Rubber Mills",
-        badge: "Blake Welted",
+        title: "Decoupled Dual-Density Outsole",
+        origin: "Vibram / Civitanova Lab, Italy",
+        tannery: "Kinetic Rubber Systems",
+        badge: "Multi-Axis Flex",
         description:
-          "100% natural hevea sap vulcanized for flexible shock absorption. Blake stitched with 11 waxed linen stitches per inch."
+          "High-abrasion vulcanized compound with energy return forefoot pucks and decoupled heel strike zones."
       },
       hardware: {
-        title: "Solid Antiqued Brass",
-        origin: "Florence, Italy",
-        badge: "Hand-Turned",
+        title: "Aviation-Grade Tension Eyelets",
+        origin: "Nagoya, Japan",
+        badge: "Zero-Friction",
         description:
-          "Solid brass eyelets cold-stamped and treated with an antiqued sulfur dip so they never chip, rust, or flake."
+          "Anodized matte alloy speed-lace loops engineered to resist tension fatigue over 500,000 stride cycles."
       },
       packaging: {
-        title: "House Packaging & Cedar Trees",
+        title: "Technical Flight Case Suite",
         origin: "Milano, Italy",
-        badge: "Complete Suite",
+        badge: "Specimen Certified",
         description:
-          "Delivered with hand-turned aromatic red cedar shoe trees, twin heavy linen travel dustbags, and a hand-signed wax-sealed certificate of allocation."
+          "Delivered in a military-spec hermetic pelican case with serialized aluminum chassis tag, micro-fiber travel sleeves, and calibration certificate."
       }
     },
     specifications: [
-      { label: "Edition Reference", value: "AUR-SOV-041/350" },
-      { label: "Construction", value: "360° Blake Welted Cupsole" },
-      { label: "Sole Material", value: "100% Natural Amber Gum" },
-      { label: "Artisan Hours", value: "38 Hours Continuous Handwork" },
-      { label: "Weight (Size 42)", value: "435 grams per shoe" },
-      { label: "Resoling", value: "Lifetime Atelier Resoling Service" }
+      { label: "Specimen Reference", value: "KIN-PR1-NOIR-041/250" },
+      { label: "Chassis Construction", value: "Generative Lattice & Inner Bootie" },
+      { label: "Outsole Compound", value: "Decoupled Dual-Density Rubber" },
+      { label: "Tare Weight (Size 42)", value: "385 grams per chassis" },
+      { label: "Heel-to-Toe Drop", value: "8.0 mm Anatomical Offset" },
+      { label: "Computational Resolution", value: "13,540 Polygon Surfaces" }
     ],
     sizing: {
       fitAdvice:
-        "True to European dress shoe sizing. If you normally wear athletic sneakers (e.g. Nike, Adidas, New Balance), we recommend selecting one full size down. If between sizes, choose the smaller size.",
-      width: "Standard European D/E width with accommodating toe box.",
+        "Engineered true to athletic performance footwear sizing. Accommodates standard D and E foot volumes with adaptive midfoot lockdown. If between sizes, select the larger size.",
+      width: "Ergonomic anatomical last with accommodating toe box.",
       sizes: [
-        { eu: 39, us: 6.5, uk: 5.5, cm: 25.2, inches: 9.9, stock: 2 },
-        { eu: 40, us: 7.5, uk: 6.5, cm: 25.8, inches: 10.1, stock: 3 },
-        { eu: 41, us: 8.5, uk: 7.5, cm: 26.5, inches: 10.4, stock: 4 },
+        { eu: 39, us: 6.5, uk: 5.5, cm: 25.2, inches: 9.9, stock: 3 },
+        { eu: 40, us: 7.5, uk: 6.5, cm: 25.8, inches: 10.1, stock: 4 },
+        { eu: 41, us: 8.5, uk: 7.5, cm: 26.5, inches: 10.4, stock: 2 },
         { eu: 42, us: 9.0, uk: 8.0, cm: 27.2, inches: 10.7, stock: 2 },
         { eu: 43, us: 10.0, uk: 9.0, cm: 27.8, inches: 10.9, stock: 1 },
         { eu: 44, us: 11.0, uk: 10.0, cm: 28.5, inches: 11.2, stock: 3 },
@@ -184,248 +187,257 @@ export const EDITIONS: Edition[] = [
       ]
     },
     provenance: {
-      cordwainer: "Maestro Giancarlo V.",
-      benchLocation: "Via Fiori Chiari 14, Brera, Milano",
-      productionHours: 38,
-      serialCertificate: "AURELIA-SOV-041-MCMXXIV"
+      cordwainer: "Lead Systems Architect K. Vance",
+      benchLocation: "KINESIS Lab 04, Brera, Milano",
+      productionHours: 28,
+      serialCertificate: "KINESIS-PR1-041-NOIR"
     }
   },
   {
-    id: "the-regatta",
-    slug: "the-regatta",
-    name: "The Regatta",
-    sub: "Racing green suede",
-    price: "€ 940",
-    priceRaw: 940,
-    editionNumber: "No. 112 / 200",
+    id: "proto-01-dune",
+    slug: "proto-01-dune",
+    name: "PROTO-01 // DUNE",
+    sub: "Sandstone Nubuck & Raw Composite",
+    price: "$ 720",
+    priceRaw: 720,
+    editionNumber: "SPECIMEN // 112 OF 180",
     currentPiece: 112,
-    totalPieces: 200,
-    series: "Series IV · 200 Pairs Worldwide",
-    vintage: "MCMXXIV Maritime Allocation",
+    totalPieces: 180,
+    series: "Series I · Parametric Footwear Lab",
+    vintage: "DROP 01 // TERRA DESERT EXPEDITION",
     status: "Few Remaining",
-    colorway: "British Racing Green · Raw Ecru · Vintage Gum",
-    headline: "Deep maritime suede steeped in historical sporting aristocracy.",
+    colorway: "Dune Sandstone · Desert Bone · Amber Pod Sole",
+    variant: "dune",
+    headline: "Organic mineral tactility synthesized with high-tensile structural architecture.",
     overview:
-      "Crafted from thick Italian velour suede from Santa Croce sull'Arno, conditioned with natural pine-resin oils for water repellency and paired with double-waxed ecru saddle stitching.",
+      "Engineered for desert expeditions and high-temperature urban navigation. Combines mineral-washed split nubuck with heat-dissipating ripstop nylon and a translucent amber rubber traction outsole.",
     story: [
-      "Inspired by the historic Riva runabouts of Lake Como and vintage regatta pennants, The Regatta represents an uncompromising union of tactile richness and wet-weather resilience.",
-      "The suede is treated at the dye stage with microscopic fluorocarbon-free oils, yielding a rich emerald nap that rejects ocean mist and light rain while maintaining its velvety nap.",
-      "Constructed around a reinforced heel counter clad in vegetable-tanned natural vachetta leather that deepens into a warm honey glow with each mile walked."
+      "Inspired by the shifting dunes of the Erg Chebbi and modern brutalist desert architecture, Dune bridges the boundary between earth-toned organic textiles and space-age composites.",
+      "The upper features dual-zone ventilation channels that draw air across the arch on every impact phase, expelling vapor through exhaust vents at the heel counter.",
+      "Finished with hand-burnished edge bevels and sealed with hydrophobic fluorine-free silicone for weather repellency."
     ],
     heroImage: shoeGreen,
     gallery: [
       {
         id: "hero-profile",
-        title: "Lateral Profile",
-        subtitle: "Rich racing green nap with ecru accents",
+        title: "Dune Lateral Architecture",
+        subtitle: "Sandstone nubuck with bone structural ribs",
         src: shoeGreen
       },
       {
         id: "heel-stamp",
-        title: "Archive Number Stamp",
-        subtitle: "Serial No. 112 / 200 hand-stamped on suede collar",
+        title: "Chassis Stabilization Cradle",
+        subtitle: "Reinforced heel counter with serialized designation",
         src: detailStamp
       },
       {
         id: "sole-stitch",
-        title: "Blake Welted Outsole",
-        subtitle: "Reinforced vulcanized rubber with channeled stitch track",
+        title: "Translucent Amber Compound",
+        subtitle: "Multi-density kinetic tread pods with anti-debris channels",
         src: detailSole
       },
       {
         id: "atelier-bench",
-        title: "Artisan Lasting",
-        subtitle: "Hand-shaped over vintage beechwood lasts for 72 hours",
+        title: "Hand Lasting & Calibration",
+        subtitle: "Precision assembled on anatomical biomechanical lasts",
         src: atelier
       }
     ],
     materials: {
       upper: {
-        title: "Tuscan Velour Suede",
-        origin: "Santa Croce sull'Arno, Tuscany, Italy",
+        title: "Sandstone Mineral Nubuck & Cordura",
+        origin: "Tuscany / Biella, Italy",
         tannery: "Conceria Stefania Suede Reserve",
-        badge: "Water-Repellent Nap",
+        badge: "Hydrophobic Coated",
         description:
-          "Selected from premium reverse-side calf splits. Deep dyed in small wooden drums to achieve the characteristic racing green depth."
+          "Reverse split suede treated with natural pine waxes paired with high-abrasion 500D Cordura nylon panels."
       },
       lining: {
-        title: "Perforated Calfskin Arch Lining",
+        title: "Glove-Soft Bio-Ceramic Knit",
         origin: "Veneto, Italy",
-        badge: "Climate-Regulating",
+        badge: "Thermal-Regulating",
         description:
-          "Micro-perforated along the arch and instep for enhanced cross-ventilation during warm Mediterranean summer afternoons."
+          "Continuous-loop knit that reflects body heat while venting humidity away from contact zones."
       },
       sole: {
-        title: "Civitanova Margom Cupsole",
-        origin: "Marche, Italy",
-        badge: "360° Sidewall Stitch",
+        title: "Translucent Amber Hevea Pods",
+        origin: "Civitanova Marche, Italy",
+        badge: "Shock-Dissipating",
         description:
-          "Dense non-marking natural rubber compound with molded heel-strike absorption puck and ribbed anti-slip profile."
+          "Vulcanized natural gum rubber pods calibrated to 55-Shore durometer for pillowy impact dampening."
       },
       hardware: {
-        title: "Waxed Braided Cotton Laces",
+        title: "Para-Cord Tensile Laces",
         origin: "Kyoto / Milano",
-        badge: "Custom Weave",
+        badge: "Mil-Spec Braid",
         description:
-          "Eight-strand tight-braid Egyptian cotton coated in organic beeswax to resist unravelling and hold knot tension."
+          "High-tensile aramid core with tight nylon exterior weave to resist fraying and knot slippage."
       },
       packaging: {
-        title: "Maritime Suite & Brass Horn",
+        title: "Expedition Flight Kit",
         origin: "Milano, Italy",
-        badge: "Hand-Numbered",
+        badge: "Numbered 112/180",
         description:
-          "Includes hand-turned brass shoe horn, suede reviving crepe brush, custom cedar stretchers, and certified certificate."
+          "Includes vacuum-sealed travel pouch, cleaning suede crepe, serialized brass token, and technical dossier."
       }
     },
     specifications: [
-      { label: "Edition Reference", value: "AUR-REG-112/200" },
-      { label: "Construction", value: "Strobel & Blake Hybrid Welt" },
-      { label: "Sole Material", value: "Civitanova Margom Rubber" },
-      { label: "Artisan Hours", value: "41 Hours Continuous Handwork" },
-      { label: "Weight (Size 42)", value: "448 grams per shoe" },
-      { label: "Resoling", value: "Full Atelier Support" }
+      { label: "Specimen Reference", value: "KIN-PR1-DUNE-112/180" },
+      { label: "Chassis Construction", value: "Hybrid Nubuck & Ripstop Shell" },
+      { label: "Outsole Compound", value: "Amber Gum Multi-Pod System" },
+      { label: "Tare Weight (Size 42)", value: "398 grams per chassis" },
+      { label: "Heel-to-Toe Drop", value: "8.5 mm Ergonomic Offset" },
+      { label: "Computational Resolution", value: "13,540 Polygon Surfaces" }
     ],
     sizing: {
       fitAdvice:
-        "Fits true to traditional luxury dress shoes. Soft suede molds quickly to foot contours within 3-4 hours of initial wear. Take your regular dress shoe size.",
-      width: "Medium-relaxed D width, gentle volume through instep.",
+        "True to size. Soft nubuck and flexible cordura bootie adapt to foot width after 2 hours of wear. Take your regular sneaker size.",
+      width: "Relaxed ergonomic volume with secure heel cup.",
       sizes: [
         { eu: 39, us: 6.5, uk: 5.5, cm: 25.2, inches: 9.9, stock: 1 },
         { eu: 40, us: 7.5, uk: 6.5, cm: 25.8, inches: 10.1, stock: 2 },
         { eu: 41, us: 8.5, uk: 7.5, cm: 26.5, inches: 10.4, stock: 2 },
         { eu: 42, us: 9.0, uk: 8.0, cm: 27.2, inches: 10.7, stock: 1 },
-        { eu: 43, us: 10.0, uk: 9.0, cm: 27.8, inches: 10.9, stock: 0 }, // waitlist
+        { eu: 43, us: 10.0, uk: 9.0, cm: 27.8, inches: 10.9, stock: 0 },
         { eu: 44, us: 11.0, uk: 10.0, cm: 28.5, inches: 11.2, stock: 2 },
         { eu: 45, us: 12.0, uk: 11.0, cm: 29.2, inches: 11.5, stock: 1 },
         { eu: 46, us: 13.0, uk: 12.0, cm: 29.8, inches: 11.7, stock: 1 }
       ]
     },
     provenance: {
-      cordwainer: "Maestra Elena R.",
-      benchLocation: "Via Fiori Chiari 14, Brera, Milano",
-      productionHours: 41,
-      serialCertificate: "AURELIA-REG-112-MCMXXIV"
+      cordwainer: "Senior Material Engineer D. Rossi",
+      benchLocation: "KINESIS Lab 04, Brera, Milano",
+      productionHours: 32,
+      serialCertificate: "KINESIS-PR1-112-DUNE"
     }
   },
   {
-    id: "the-chancellor",
-    slug: "the-chancellor",
-    name: "The Chancellor",
-    sub: "Oxblood box calf",
-    price: "€ 980",
-    priceRaw: 980,
-    editionNumber: "No. 007 / 150",
+    id: "proto-01-slate",
+    slug: "proto-01-slate",
+    name: "PROTO-01 // SLATE",
+    sub: "Industrial Titanium & Cyber Amber Matrix",
+    price: "$ 750",
+    priceRaw: 750,
+    editionNumber: "SPECIMEN // 007 OF 120",
     currentPiece: 7,
-    totalPieces: 150,
-    series: "Series II · 150 Pairs Worldwide",
-    vintage: "MCMXXIV Private Reserve",
+    totalPieces: 120,
+    series: "Series I · Parametric Footwear Lab",
+    vintage: "DROP 01 // TITANIUM MONOLITH",
     status: "Reserve Only",
-    colorway: "Oxblood Bordeaux · Smoked Charcoal Rubber",
-    headline: "Rare museum-calf patina with an authoritative formal presence.",
+    colorway: "Industrial Slate · Cyber White · High-Tension Black",
+    variant: "slate",
+    headline: "High-contrast architectural monolith engineered for extreme torsional control.",
     overview:
-      "Tanned with chestnut bark and mimosa extracts over seven weeks, then hand-sponged with natural pigments to achieve a multi-tonal smoky oxblood depth that cannot be replicated by machinery.",
+      "The most technical specimen in the KINESIS registry. Featuring dual-layer lateral containment rails, high-frequency sonic welded seams, and high-contrast industrial livery inspired by aerospace prototyping.",
     story: [
-      "The rarest offering from the atelier, The Chancellor is limited to strictly 150 pairs worldwide. The museum calfskin is finished entirely by hand using antique bone burnishers and circular wax friction.",
-      "The dark burgundy hue shifts under direct evening illumination from deep mahogany to fiery port wine, creating a mesmerizing optical depth reminiscent of 19th-century diplomatic armchairs.",
-      "Each pair is numbered by hand with gold leaf on the inner tongue and accompanied by an authenticated archival certificate signed by the master artisan."
+      "Designed as the conceptual benchmark of the PROTO collection, the Slate was developed using dynamic gait stress simulations to engineer zero-loss energy transfer.",
+      "The multi-layered upper features reflective technical micro-striping that illuminates under direct strobe light while remaining understated in ambient daytime settings.",
+      "Limited to strictly 120 units worldwide, each chassis is individually inspected, weight-balanced within 1.5 grams, and certified by the lead architect."
     ],
     heroImage: shoeBurgundy,
     gallery: [
       {
         id: "hero-profile",
-        title: "Lateral Profile",
-        subtitle: "Burnished oxblood museum patina",
+        title: "Slate Kinetic Profile",
+        subtitle: "Titanium grey panels with high-frequency structural welds",
         src: shoeBurgundy
       },
       {
         id: "heel-stamp",
-        title: "Archive Number Stamp",
-        subtitle: "Serial No. 007 / 150 hot-stamped in gold leaf",
+        title: "Chassis Number Calibration",
+        subtitle: "Serial No. 007 / 120 hot-stamped on outer heel rail",
         src: detailStamp
       },
       {
         id: "sole-stitch",
-        title: "Stitched Dark Outsole",
-        subtitle: "Smoked natural rubber with recessed wax stitch channel",
+        title: "Articulated Kinetic Sole",
+        subtitle: "Decoupled impact zones with high-durometer lateral skid plate",
         src: detailSole
       },
       {
         id: "atelier-bench",
-        title: "The Hand Finish",
-        subtitle: "Artisans burnishing edges with hot carnauba wax",
+        title: "Final QA Inspection",
+        subtitle: "Torsional stiffness and laser alignment testing",
         src: atelier
       }
     ],
     materials: {
       upper: {
-        title: "Museum Box Calfskin",
-        origin: "Ilcea Tannery, Torino, Italy",
-        tannery: "Radica Museum Calf Reserve",
-        badge: "Rare Marble Patina",
+        title: "Titanium Tech-Nylon & Molded TPU",
+        origin: "Torino / Stuttgart",
+        tannery: "Advanced Polymer R&D",
+        badge: "Sonic Welded",
         description:
-          "Slow vegetable tanning utilizing oak bark and chestnut liquors. Finished with hand-applied marbled dye techniques."
+          "High-density ripstop weave reinforced with bonded TPU containment exoskeleton to eliminate lateral roll."
       },
       lining: {
-        title: "Cognac Glove-Soft Calf",
-        origin: "Florence, Italy",
-        badge: "Zero Synthetic Backing",
+        title: "Seamless Hydro-Phobic Mesh",
+        origin: "Frankfurt, Germany",
+        badge: "Anti-Friction",
         description:
-          "Unadulterated aniline calfskin lining that absorbs foot moisture effortlessly and stays cool even after sixteen hours of continuous wear."
+          "Frictionless sockliner with antimicrobial silver-ion treatment for marathon wear."
       },
       sole: {
-        title: "Smoked Rubber Atelier Sole",
+        title: "Multi-Density Kinetic Outsole",
         origin: "Civitanova Marche, Italy",
-        badge: "Blake Construction",
+        badge: "Reinforced Shank",
         description:
-          "Custom tinted charcoal-smoke rubber with deep micro-siping for silent traction on wet marble and cobblestone."
+          "Carbon-infused midfoot stabilization plate bonded to high-friction micro-siped rubber pods."
       },
       hardware: {
-        title: "Gunmetal Antiqued Eyelets",
-        origin: "Milano, Italy",
-        badge: "Cold-Forged",
+        title: "Aircraft Alloy Cable Lacing",
+        origin: "Kyoto / Tokyo",
+        badge: "Cable Tension",
         description:
-          "Cold-forged iron alloy treated with dark oil quenching to prevent corrosion while complementing the deep oxblood leather."
+          "Braided dynema fiber core with micro-toggle closure system."
       },
       packaging: {
-        title: "Collector's Vault Presentation",
+        title: "Numbered Aluminum Archival Case",
         origin: "Milano, Italy",
-        badge: "Numbered 007/150",
+        badge: "Vault Edition",
         description:
-          "Housed in a handmade dark walnut presentation chest with velvet lining, bespoke shoe trees, and private concierge key card."
+          "Milled aerospace aluminum case with custom cut EVA foam cradle and RFID certificate."
       }
     },
     specifications: [
-      { label: "Edition Reference", value: "AUR-CHN-007/150" },
-      { label: "Construction", value: "Traditional Blake Welt" },
-      { label: "Sole Material", value: "Smoked Natural Hevea Rubber" },
-      { label: "Artisan Hours", value: "46 Hours Continuous Handwork" },
-      { label: "Weight (Size 42)", value: "460 grams per shoe" },
-      { label: "Resoling", value: "Bespoke Concierge Lifetime" }
+      { label: "Specimen Reference", value: "KIN-PR1-SLATE-007/120" },
+      { label: "Chassis Construction", value: "Sonic-Welded TPU & Tech Nylon" },
+      { label: "Outsole Compound", value: "Carbon Shank & Dual Density Rubber" },
+      { label: "Tare Weight (Size 42)", value: "392 grams per chassis" },
+      { label: "Heel-to-Toe Drop", value: "8.0 mm Precision Drop" },
+      { label: "Computational Resolution", value: "13,540 Polygon Surfaces" }
     ],
     sizing: {
       fitAdvice:
-        "Firm initial hand-fit that yields gracefully after two wears. If you have a wider forefoot (EE) or high instep, order a half size larger. Otherwise true to European formal sizing.",
-      width: "Classic Italian sleek D width with structured toe box.",
+        "Precise ergonomic fit. Lateral containment rails hold the midfoot firmly with comfortable forefoot spread. True to size.",
+      width: "Standard performance D width with anatomical arch support.",
       sizes: [
         { eu: 39, us: 6.5, uk: 5.5, cm: 25.2, inches: 9.9, stock: 1 },
-        { eu: 40, us: 7.5, uk: 6.5, cm: 25.8, inches: 10.1, stock: 1 },
-        { eu: 41, us: 8.5, uk: 7.5, cm: 26.5, inches: 10.4, stock: 2 },
+        { eu: 40, us: 7.5, uk: 6.5, cm: 25.8, inches: 10.1, stock: 2 },
+        { eu: 41, us: 8.5, uk: 7.5, cm: 26.5, inches: 10.4, stock: 1 },
         { eu: 42, us: 9.0, uk: 8.0, cm: 27.2, inches: 10.7, stock: 1 },
         { eu: 43, us: 10.0, uk: 9.0, cm: 27.8, inches: 10.9, stock: 1 },
         { eu: 44, us: 11.0, uk: 10.0, cm: 28.5, inches: 11.2, stock: 1 },
-        { eu: 45, us: 12.0, uk: 11.0, cm: 29.2, inches: 11.5, stock: 1 },
-        { eu: 46, us: 13.0, uk: 12.0, cm: 29.8, inches: 11.7, stock: 0 } // waitlist
+        { eu: 45, us: 12.0, uk: 11.0, cm: 29.2, inches: 11.5, stock: 0 },
+        { eu: 46, us: 13.0, uk: 12.0, cm: 29.8, inches: 11.7, stock: 1 }
       ]
     },
     provenance: {
-      cordwainer: "Maestro Giancarlo V. & Master Luigi T.",
-      benchLocation: "Via Fiori Chiari 14, Brera, Milano",
-      productionHours: 46,
-      serialCertificate: "AURELIA-CHN-007-MCMXXIV"
+      cordwainer: "Chief Kinetic Architect M. Richter",
+      benchLocation: "KINESIS Lab 04, Brera, Milano",
+      productionHours: 36,
+      serialCertificate: "KINESIS-PR1-007-SLATE"
     }
   }
 ];
 
-export function getEditionBySlug(slug: string): Edition | undefined {
-  return EDITIONS.find((e) => e.slug === slug || e.id === slug);
-}
+export const getEditionBySlug = (slug: string): Edition | undefined => {
+  // Aliases mapping old routes to new technical editions
+  const aliasMap: Record<string, string> = {
+    "the-sovereign": "proto-01-noir",
+    "the-regatta": "proto-01-dune",
+    "the-chancellor": "proto-01-slate",
+  };
+  const target = aliasMap[slug] || slug;
+  return EDITIONS.find((e) => e.slug === target || e.id === target) || EDITIONS[0];
+};

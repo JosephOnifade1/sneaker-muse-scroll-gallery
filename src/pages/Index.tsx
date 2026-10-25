@@ -6,6 +6,7 @@ import Vault from "@/components/Vault";
 import Heritage from "@/components/Heritage";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import { SneakerRenderer } from "@/components/SneakerRenderer";
 
 const Index = () => (
   <div className="min-h-screen bg-background">
@@ -19,6 +20,7 @@ const Index = () => (
       <Newsletter />
     </main>
     <Footer />
+    <SneakerRenderer />
   </div>
 );
 export default Index;

@@ -40,15 +40,15 @@ const ProductDetail = () => {
   if (!edition) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center text-center p-6">
-        <h1 className="font-serif text-4xl mb-4">Edition Not Found</h1>
+        <h1 className="font-display text-4xl mb-4 font-black">Edition not found</h1>
         <p className="text-muted-foreground text-sm mb-6">
-          The requested archival piece is either private or unavailable.
+          This specimen is unavailable or has been retired from the archive.
         </p>
         <Link
           to="/"
-          className="border border-primary px-6 py-2.5 kicker text-foreground hover:bg-primary/10 transition"
+          className="btn-primary"
         >
-          Return to La Maison
+          Back to specimens
         </Link>
       </div>
     );
@@ -63,25 +63,21 @@ const ProductDetail = () => {
       <main className="flex-1 pt-24 pb-20">
         {/* Breadcrumb Navigation & Back to Archive */}
         <div className="mx-auto max-w-7xl px-6 pt-6 pb-8">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/70 pb-4 text-xs font-sans">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Link to="/" className="hover:text-primary transition">
-                Maison
-              </Link>
-              <span>/</span>
-              <Link to="/#vault" className="hover:text-primary transition">
-                The Vault
-              </Link>
-              <span>/</span>
-              <span className="text-foreground font-serif tracking-wide text-sm">{edition.name}</span>
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/40 pb-4">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Link to="/" className="hover:text-primary transition px-2 py-1 rounded-full hover:bg-white/5">Lab</Link>
+              <span className="text-border">·</span>
+              <Link to="/#vault" className="hover:text-primary transition px-2 py-1 rounded-full hover:bg-white/5">Specimens</Link>
+              <span className="text-border">·</span>
+              <span className="text-foreground font-medium">{edition.name}</span>
             </div>
 
             <Link
               to="/#vault"
-              className="inline-flex items-center gap-1.5 kicker text-[0.65rem] text-muted-foreground hover:text-primary transition"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition rounded-full border border-border/50 px-3 py-1.5 hover:border-primary/40"
             >
               <ArrowLeft className="h-3 w-3" />
-              <span>Back to Vault Archive</span>
+              <span>All specimens</span>
             </Link>
           </div>
         </div>
@@ -96,11 +92,11 @@ const ProductDetail = () => {
                 shoeName={edition.name}
                 editionNumber={edition.editionNumber}
                 variant={
-                  edition.slug === "the-regatta"
-                    ? "green"
-                    : edition.slug === "the-chancellor"
-                    ? "oxblood"
-                    : "ivory"
+                  edition.id === "proto-01-dune" || edition.slug === "the-regatta" || edition.slug === "proto-01-dune"
+                    ? "dune"
+                    : edition.id === "proto-01-slate" || edition.slug === "the-chancellor" || edition.slug === "proto-01-slate"
+                    ? "slate"
+                    : "noir"
                 }
               />
             </div>
@@ -109,26 +105,26 @@ const ProductDetail = () => {
             <div className="lg:col-span-5 flex flex-col gap-6 lg:pl-4">
               {/* Top Meta */}
               <div>
-                <div className="flex items-center justify-between">
-                  <span className="kicker text-[0.68rem] text-primary">{edition.series}</span>
-                  <span className="border border-border/80 bg-secondary/40 px-2 py-0.5 text-[0.65rem] font-sans text-muted-foreground tracking-widest uppercase">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="kicker">{edition.series}</p>
+                  <span className="inline-flex items-center px-3 py-1 rounded-full border border-border/50 bg-secondary/40 text-[0.65rem] font-medium text-muted-foreground tracking-wide">
                     {edition.status}
                   </span>
                 </div>
 
-                <h1 className="font-serif text-4xl sm:text-5xl mt-2 tracking-tight text-foreground">
+                <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tight text-foreground">
                   {edition.name}
                 </h1>
-                <p className="font-serif text-lg italic text-muted-foreground mt-0.5">
+                <p className="text-base text-muted-foreground mt-1">
                   {edition.sub}
                 </p>
 
-                <div className="mt-4 flex items-baseline gap-4 border-b border-border/80 pb-6">
-                  <span className="font-serif text-3xl sm:text-4xl text-primary font-normal">
+                <div className="mt-5 flex items-baseline gap-4 border-b border-border/40 pb-6">
+                  <span className="font-display text-3xl sm:text-4xl text-primary font-black">
                     {edition.price}
                   </span>
-                  <span className="text-[0.68rem] font-sans uppercase tracking-wider text-muted-foreground">
-                    Private Bespoke Delivery Included
+                  <span className="text-xs text-muted-foreground">
+                    Bespoke delivery included
                   </span>
                 </div>
               </div>
@@ -143,19 +139,15 @@ const ProductDetail = () => {
                 </p>
               </div>
 
-              {/* Colorway / Vintage */}
-              <div className="border border-border/70 p-3.5 bg-card/40 flex justify-between items-center text-xs">
+              {/* Colorway / Edition Info */}
+              <div className="rounded-xl border border-border/50 bg-card/50 p-4 flex justify-between items-center">
                 <div>
-                  <span className="kicker block text-[0.6rem] text-muted-foreground mb-0.5">
-                    Colorway Specification
-                  </span>
-                  <span className="font-serif text-sm text-foreground">{edition.colorway}</span>
+                  <span className="kicker block mb-0.5">Colorway</span>
+                  <span className="text-sm font-medium text-foreground">{edition.colorway}</span>
                 </div>
                 <div className="text-right">
-                  <span className="kicker block text-[0.6rem] text-muted-foreground mb-0.5">
-                    Batch Allocation
-                  </span>
-                  <span className="font-mono text-xs text-primary">{edition.editionNumber}</span>
+                  <span className="kicker block mb-0.5">Allocation</span>
+                  <span className="text-sm font-medium text-primary">{edition.editionNumber}</span>
                 </div>
               </div>
 
@@ -189,18 +181,18 @@ const ProductDetail = () => {
                         key={s.eu}
                         disabled={isSoldOut}
                         onClick={() => setSelectedSize(s.eu)}
-                        className={`relative flex flex-col items-center justify-center p-2.5 border transition-all duration-200 ${
+                        className={`relative flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 ${
                           isSelected
-                            ? "border-primary bg-primary/10 text-primary ring-1 ring-primary shadow-gold"
+                            ? "border-primary bg-primary/10 text-primary ring-2 ring-primary/30 shadow-gold"
                             : isSoldOut
-                            ? "border-border/40 bg-secondary/20 opacity-40 cursor-not-allowed"
-                            : "border-border bg-card hover:border-primary/50 text-foreground"
+                            ? "border-border/30 bg-secondary/20 opacity-40 cursor-not-allowed"
+                            : "border-border/60 bg-card hover:border-primary/50 text-foreground"
                         }`}
                       >
-                        <span className="font-serif text-base font-medium">EU {s.eu}</span>
+                        <span className="font-semibold text-sm">EU {s.eu}</span>
                         <span className="text-[0.65rem] text-muted-foreground">US {s.us}</span>
                         {s.stock > 0 && s.stock <= 2 && (
-                          <span className="absolute -top-1.5 -right-1 bg-primary text-primary-foreground text-[0.55rem] px-1 py-0.2 font-sans font-bold uppercase tracking-tighter">
+                          <span className="absolute -top-2 -right-1 rounded-full bg-primary text-primary-foreground text-[0.55rem] px-1.5 py-0.5 font-bold">
                             {s.stock} left
                           </span>
                         )}
@@ -215,30 +207,28 @@ const ProductDetail = () => {
                 </p>
               </div>
 
-              {/* Reservation CTA Action */}
+              {/* Reservation CTA */}
               <div className="pt-2">
                 <button
                   onClick={() => setIsReservationOpen(true)}
-                  className="w-full relative group overflow-hidden border border-primary bg-primary text-primary-foreground py-4 px-6 transition-all duration-300 hover:shadow-gold hover:bg-primary/95 flex items-center justify-center gap-3"
+                  className="w-full group rounded-2xl bg-primary text-primary-foreground py-4 px-6 transition-all duration-300 hover:shadow-gold hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-3 font-semibold text-sm"
                 >
-                  <span className="font-sans text-xs uppercase tracking-[0.25em] font-semibold">
-                    Request Numbered Allocation · {edition.editionNumber}
-                  </span>
+                  <span>Reserve · {edition.editionNumber}</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
 
-                {/* Reservation Guarantees */}
+                {/* Guarantee Pills */}
                 <div className="mt-4 grid grid-cols-3 gap-2 text-[0.68rem] text-muted-foreground text-center">
-                  <div className="p-2 border border-border/60 bg-secondary/20">
-                    <span className="block text-primary font-serif mb-0.5">Zero Prepayment</span>
-                    <span>Verified by concierge</span>
+                  <div className="rounded-xl p-3 border border-border/40 bg-card/50">
+                    <span className="block text-primary font-semibold mb-0.5">No prepayment</span>
+                    <span>Concierge verified</span>
                   </div>
-                  <div className="p-2 border border-border/60 bg-secondary/20">
-                    <span className="block text-primary font-serif mb-0.5">Gold Insole Monogram</span>
+                  <div className="rounded-xl p-3 border border-border/40 bg-card/50">
+                    <span className="block text-primary font-semibold mb-0.5">Insole monogram</span>
                     <span>Complimentary</span>
                   </div>
-                  <div className="p-2 border border-border/60 bg-secondary/20">
-                    <span className="block text-primary font-serif mb-0.5">Archive Certificate</span>
+                  <div className="rounded-xl p-3 border border-border/40 bg-card/50">
+                    <span className="block text-primary font-semibold mb-0.5">Archive cert.</span>
                     <span>Wax sealed</span>
                   </div>
                 </div>
@@ -250,32 +240,30 @@ const ProductDetail = () => {
         {/* Detailed Materials Section */}
         <MaterialsSection edition={edition} />
 
-        {/* Atelier Provenance Banner */}
-        <section className="py-16 border-t border-border bg-secondary/20">
+        {/* Laboratory Certification Banner */}
+        <section className="py-16 border-t border-border/40 bg-secondary/10">
           <div className="mx-auto max-w-7xl px-6">
-            <div className="border border-primary/30 p-8 sm:p-12 relative overflow-hidden bg-card/60 backdrop-blur">
+            <div className="rounded-2xl border border-border/50 p-8 sm:p-12 relative overflow-hidden bg-card/60 backdrop-blur">
               <div className="max-w-2xl">
-                <span className="kicker text-primary mb-2 block">Provenance & Cordwainer Guarantee</span>
-                <h3 className="font-serif text-3xl sm:text-4xl text-foreground">
-                  Bench-crafted in Brera under the supervision of {edition.provenance.cordwainer}.
+                <p className="kicker mb-3">Laboratory certification & quality assurance</p>
+                <h3 className="font-display text-2xl sm:text-3xl text-foreground font-black">
+                  Engineered in Kyoto & Milan under the supervision of {edition.provenance.cordwainer}.
                 </h3>
-                <p className="mt-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Every numbered shoe is shaped, welted, and hand-rubbed over {edition.provenance.productionHours} hours of focused cobbler work. Each pair comes with authenticated certificate{" "}
-                  <code className="text-primary font-mono">{edition.provenance.serialCertificate}</code>.
+                <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                  Every numbered specimen is laser-scanned, stress-calibrated, and hand-finished over {edition.provenance.productionHours} hours of precision assembly. Each pair ships with hardware serial{" "}
+                  <code className="text-primary text-xs bg-primary/10 px-1.5 py-0.5 rounded">{edition.provenance.serialCertificate}</code>.
                 </p>
-                <div className="mt-6 flex flex-wrap gap-6 text-xs text-muted-foreground">
-                  <div>
-                    <span className="kicker block text-[0.62rem]">Workshop Location</span>
-                    <span className="text-foreground font-serif">{edition.provenance.benchLocation}</span>
-                  </div>
-                  <div>
-                    <span className="kicker block text-[0.62rem]">Artisan Work</span>
-                    <span className="text-foreground font-serif">{edition.provenance.productionHours} Hours Single-Artisan</span>
-                  </div>
-                  <div>
-                    <span className="kicker block text-[0.62rem]">Atelier Service</span>
-                    <span className="text-foreground font-serif">Lifetime Complimentary Resoling</span>
-                  </div>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {[
+                    { label: "Facility", val: edition.provenance.benchLocation },
+                    { label: "Assembly", val: `${edition.provenance.productionHours}h robotic & hand-finished` },
+                    { label: "Warranty", val: "Lifetime structural recalibration" },
+                  ].map(({ label, val }) => (
+                    <div key={label} className="rounded-xl border border-border/40 bg-secondary/40 px-4 py-3">
+                      <span className="kicker block mb-0.5">{label}</span>
+                      <span className="text-sm font-medium text-foreground">{val}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -313,17 +301,17 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsSizingModalOpen(true)}
-                  className="hidden sm:inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition border border-border px-3 py-2"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition rounded-full border border-border/60 px-3 py-2 hover:border-primary/40"
                 >
                   <Ruler className="h-3 w-3" />
-                  <span>Size Guide</span>
+                  <span>Size guide</span>
                 </button>
                 <button
                   onClick={() => setIsReservationOpen(true)}
-                  className="border border-primary bg-primary text-primary-foreground px-5 py-2.5 font-sans text-xs uppercase tracking-[0.2em] font-semibold hover:bg-primary/90 transition shadow-gold"
+                  className="rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-xs font-semibold hover:shadow-gold hover:scale-[1.02] transition-all duration-200"
                 >
                   Reserve {edition.name}
                 </button>

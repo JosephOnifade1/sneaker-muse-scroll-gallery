@@ -1,8 +1,8 @@
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import { useRef } from "react";
-import ivory from "@/assets/hero-shoe.png";
-import green from "@/assets/shoe-green.png";
-import burgundy from "@/assets/shoe-burgundy.png";
+import noir from "@/assets/proto-01-noir.png";
+import dune from "@/assets/proto-01-dune.png";
+import slate from "@/assets/proto-01-slate.png";
 import Reveal from "./Reveal";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
@@ -13,7 +13,7 @@ const items = [
     slug: "proto-01-noir",
     sub: "Carbon lattice · Ballistic mesh · Decoupled chassis",
     price: "$680",
-    img: ivory,
+    img: noir,
     ed: "018 / 150",
     badge: "150 pairs",
   },
@@ -22,7 +22,7 @@ const items = [
     slug: "proto-01-dune",
     sub: "Nubuck overlay · Kinetic tendon lacing · Desert composite",
     price: "$720",
-    img: green,
+    img: dune,
     ed: "064 / 200",
     badge: "200 pairs",
   },
@@ -31,7 +31,7 @@ const items = [
     slug: "proto-01-slate",
     sub: "White membrane · Cyan structural weld · 385g tare",
     price: "$750",
-    img: burgundy,
+    img: slate,
     ed: "009 / 100",
     badge: "100 pairs",
   },

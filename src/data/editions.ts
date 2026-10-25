@@ -1,6 +1,6 @@
-import heroShoe from "@/assets/hero-shoe.png";
-import shoeGreen from "@/assets/shoe-green.png";
-import shoeBurgundy from "@/assets/shoe-burgundy.png";
+import protoNoir from "@/assets/proto-01-noir.png";
+import protoDune from "@/assets/proto-01-dune.png";
+import protoSlate from "@/assets/proto-01-slate.png";
 import atelier from "@/assets/atelier.jpg";
 import detailSole from "@/assets/detail-sole.jpg";
 import detailStamp from "@/assets/detail-stamp.jpg";
@@ -96,13 +96,13 @@ export const EDITIONS: Edition[] = [
       "The ballistic mesh core permits 360-degree cross-laminar airflow, maintaining optimal thermal equilibrium under prolonged high-cadence walking.",
       "Underneath, the decoupled dual-compound outsole features multi-directional siping for razor-sharp mechanical grip on wet asphalt, polished granite, and urban surfaces."
     ],
-    heroImage: heroShoe,
+    heroImage: protoNoir,
     gallery: [
       {
         id: "hero-profile",
         title: "Chassis Lateral Profile",
         subtitle: "Parametric composite lattice with tapered forefoot",
-        src: heroShoe
+        src: protoNoir
       },
       {
         id: "heel-stamp",
@@ -216,13 +216,13 @@ export const EDITIONS: Edition[] = [
       "The upper features dual-zone ventilation channels that draw air across the arch on every impact phase, expelling vapor through exhaust vents at the heel counter.",
       "Finished with hand-burnished edge bevels and sealed with hydrophobic fluorine-free silicone for weather repellency."
     ],
-    heroImage: shoeGreen,
+    heroImage: protoDune,
     gallery: [
       {
         id: "hero-profile",
         title: "Dune Lateral Architecture",
         subtitle: "Sandstone nubuck with bone structural ribs",
-        src: shoeGreen
+        src: protoDune
       },
       {
         id: "heel-stamp",
@@ -334,13 +334,13 @@ export const EDITIONS: Edition[] = [
       "The multi-layered upper features reflective technical micro-striping that illuminates under direct strobe light while remaining understated in ambient daytime settings.",
       "Limited to strictly 120 units worldwide, each chassis is individually inspected, weight-balanced within 1.5 grams, and certified by the lead architect."
     ],
-    heroImage: shoeBurgundy,
+    heroImage: protoSlate,
     gallery: [
       {
         id: "hero-profile",
         title: "Slate Kinetic Profile",
         subtitle: "Titanium grey panels with high-frequency structural welds",
-        src: shoeBurgundy
+        src: protoSlate
       },
       {
         id: "heel-stamp",

@@ -95,6 +95,13 @@ const ProductDetail = () => {
                 items={edition.gallery}
                 shoeName={edition.name}
                 editionNumber={edition.editionNumber}
+                variant={
+                  edition.slug === "the-regatta"
+                    ? "green"
+                    : edition.slug === "the-chancellor"
+                    ? "oxblood"
+                    : "ivory"
+                }
               />
             </div>
 

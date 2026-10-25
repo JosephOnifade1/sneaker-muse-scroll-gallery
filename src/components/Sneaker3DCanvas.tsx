@@ -27,8 +27,18 @@ export const Sneaker3DCanvas = ({
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const shoeMeshRef = useRef<THREE.Mesh | null>(null);
+  const shoeMeshesRef = useRef<THREE.Mesh[]>([]);
+  const rimLightRef = useRef<THREE.DirectionalLight | null>(null);
   const pivotRef = useRef<THREE.Group | null>(null);
   const animationFrameId = useRef<number | null>(null);
+
+  // Materials Cache for dynamic colorway switching
+  const materialsCache = useRef<Record<"ivory" | "green" | "oxblood", THREE.MeshStandardMaterial | null>>({
+    ivory: null,
+    green: null,
+    oxblood: null,
+  });
+  const currentVariantRef = useRef<"ivory" | "green" | "oxblood">(variant);
 
   // Drag interaction state
   const isDragging = useRef(false);
@@ -103,6 +113,31 @@ export const Sneaker3DCanvas = ({
     targetY.current = yVal;
   }, [scrollProgress, mouseX, mouseY]);
 
+  // Apply chosen colorway material & accent illumination
+  const applyVariantMaterial = (v: "ivory" | "green" | "oxblood") => {
+    currentVariantRef.current = v;
+    const targetMat = materialsCache.current[v];
+    if (targetMat) {
+      shoeMeshesRef.current.forEach((mesh) => {
+        mesh.material = targetMat;
+      });
+      targetMat.needsUpdate = true;
+    }
+    if (rimLightRef.current) {
+      if (v === "green") {
+        rimLightRef.current.color.setHex(0xd4af37);
+      } else if (v === "oxblood") {
+        rimLightRef.current.color.setHex(0xe88a6d);
+      } else {
+        rimLightRef.current.color.setHex(0xe5b85c);
+      }
+    }
+  };
+
+  useEffect(() => {
+    applyVariantMaterial(variant);
+  }, [variant]);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -151,6 +186,7 @@ export const Sneaker3DCanvas = ({
     // Gold Luxury Rim Light (Striking back rim reflection on leather edges)
     const rimLight = new THREE.DirectionalLight(0xe5b85c, 4.0);
     rimLight.position.set(-4, 3, -3);
+    rimLightRef.current = rimLight;
     scene.add(rimLight);
 
     // Fill Light (Gentle reflection from below so gum sole details pop)
@@ -177,7 +213,7 @@ export const Sneaker3DCanvas = ({
     pivotRef.current = pivot;
     scene.add(pivot);
 
-    // 7. Load GLTF Model and select the luxury Beach/Ivory leather variant
+    // 7. Load GLTF Model and cache material variants for instant switching
     const loader = new GLTFLoader();
     loader.load(
       "/sneaker.glb",
@@ -198,27 +234,66 @@ export const Sneaker3DCanvas = ({
         const baseScale = 2.4 / maxDim;
         model.scale.set(baseScale, baseScale, baseScale);
 
-        // Switch to Material Variant 1 (Beach / warm sand & tan leather)
-        // or customize colorway for Aurelia Sovereign / Regatta / Chancellor
-        if (gltf.parser) {
-          gltf.parser.getDependency("material", 1).then((beachMat: THREE.Material) => {
-            model.traverse((child) => {
-              if ((child as THREE.Mesh).isMesh) {
-                const mesh = child as THREE.Mesh;
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                shoeMeshRef.current = mesh;
+        const meshes: THREE.Mesh[] = [];
+        model.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            meshes.push(mesh);
+          }
+        });
+        shoeMeshesRef.current = meshes;
+        if (meshes.length > 0) {
+          shoeMeshRef.current = meshes[0];
+        }
 
-                if (beachMat) {
-                  mesh.material = beachMat;
-                  const stdMat = mesh.material as THREE.MeshStandardMaterial;
-                  stdMat.roughness = 0.42;
-                  stdMat.metalness = 0.08;
-                  stdMat.envMapIntensity = 1.4;
-                  stdMat.needsUpdate = true;
-                }
-              }
-            });
+        // Initialize materials for each edition variant:
+        // 0: Midnight, 1: Beach, 2: Street
+        if (gltf.parser) {
+          Promise.all([
+            gltf.parser.getDependency("material", 0),
+            gltf.parser.getDependency("material", 1),
+            gltf.parser.getDependency("material", 2),
+          ]).then(([midnightMat, beachMat, streetMat]: [THREE.Material, THREE.Material, THREE.Material]) => {
+            const baseBeach = (beachMat || midnightMat) as THREE.MeshStandardMaterial;
+            const baseMidnight = (midnightMat || beachMat) as THREE.MeshStandardMaterial;
+            const baseStreet = (streetMat || beachMat) as THREE.MeshStandardMaterial;
+
+            // 1. Ivory (The Sovereign - French calfskin & amber gum)
+            if (baseBeach) {
+              const ivoryMat = baseBeach.clone();
+              ivoryMat.color.setHex(0xfcf8f2);
+              ivoryMat.roughness = 0.44;
+              ivoryMat.metalness = 0.08;
+              ivoryMat.envMapIntensity = 1.4;
+              ivoryMat.needsUpdate = true;
+              materialsCache.current.ivory = ivoryMat;
+            }
+
+            // 2. Green (The Regatta - British racing green velour suede)
+            if (baseBeach || baseStreet) {
+              const greenMat = (baseBeach || baseStreet).clone();
+              greenMat.color.setRGB(0.12, 0.28, 0.18);
+              greenMat.roughness = 0.78; // suede tactile nap
+              greenMat.metalness = 0.02;
+              greenMat.envMapIntensity = 0.95;
+              greenMat.needsUpdate = true;
+              materialsCache.current.green = greenMat;
+            }
+
+            // 3. Oxblood (The Chancellor - Museum box calf & smoked sole)
+            if (baseBeach || baseMidnight) {
+              const oxbloodMat = (baseBeach || baseMidnight).clone();
+              oxbloodMat.color.setRGB(0.32, 0.08, 0.14);
+              oxbloodMat.roughness = 0.32; // high-luster polished calfskin
+              oxbloodMat.metalness = 0.14;
+              oxbloodMat.envMapIntensity = 1.6;
+              oxbloodMat.needsUpdate = true;
+              materialsCache.current.oxblood = oxbloodMat;
+            }
+
+            applyVariantMaterial(currentVariantRef.current);
           });
         }
 
@@ -313,6 +388,34 @@ export const Sneaker3DCanvas = ({
     isDragging.current = false;
   };
 
+  // Touch drag support for mobile / touchscreens
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!interactive || e.touches.length === 0) return;
+    isDragging.current = true;
+    dragStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || e.touches.length === 0) return;
+    const dx = (e.touches[0].clientX - dragStart.current.x) * 0.008;
+    const dy = (e.touches[0].clientY - dragStart.current.y) * 0.008;
+
+    dragRotation.current.y += dx;
+    dragRotation.current.x += dy;
+
+    dragStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+
+  const handleTouchEnd = () => {
+    isDragging.current = false;
+  };
+
+  const variantTitles: Record<"ivory" | "green" | "oxblood", string> = {
+    ivory: "The Sovereign (Ivory Calf)",
+    green: "The Regatta (Racing Green)",
+    oxblood: "The Chancellor (Oxblood)",
+  };
+
   return (
     <div
       ref={containerRef}
@@ -320,13 +423,18 @@ export const Sneaker3DCanvas = ({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+      style={{ touchAction: "pan-y" }}
       className={`relative h-full w-full select-none cursor-grab active:cursor-grabbing ${className}`}
     >
       {/* Loading state indicator */}
       {isLoading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none z-10">
           <div className="h-7 w-7 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-          <span className="kicker text-[0.62rem] text-primary/80">Loading Sovereign 3D Last...</span>
+          <span className="kicker text-[0.62rem] text-primary/80">Loading {variantTitles[variant]} 3D Last...</span>
         </div>
       )}
 
@@ -334,7 +442,7 @@ export const Sneaker3DCanvas = ({
       {!isLoading && (
         <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex items-center gap-1.5 border border-primary/30 bg-background/70 px-2.5 py-1 text-[0.62rem] backdrop-blur kicker text-primary">
           <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-          <span>Real-time 3D · Responds to Mouse & Scroll</span>
+          <span>3D Last · {variantTitles[variant]}</span>
         </div>
       )}
     </div>

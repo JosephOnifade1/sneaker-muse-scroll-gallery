@@ -1,8 +1,50 @@
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import shoe from "@/assets/hero-shoe.png";
+import shoeGreen from "@/assets/shoe-green.png";
+import shoeBurgundy from "@/assets/shoe-burgundy.png";
 import { Sneaker3DCanvas } from "@/components/Sneaker3DCanvas";
-import { Box, Layers } from "lucide-react";
+import { Box, Layers, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const heroEditions = [
+  {
+    id: "ivory" as const,
+    slug: "the-sovereign",
+    name: "Sovereign",
+    sub: "Series VII · 350 Pairs Worldwide · € 890",
+    tagline: "Tuscan calfskin · Hand-burnished · Amber gum sole",
+    img: shoe,
+    swatchHex: "#ede4d5",
+    borderHex: "#c8a774",
+    label: "Ivory Calf",
+    number: "041 / 350",
+  },
+  {
+    id: "green" as const,
+    slug: "the-regatta",
+    name: "Regatta",
+    sub: "Series IV · 200 Pairs Worldwide · € 940",
+    tagline: "Tuscan velour suede · Water-repellent nap · Margom sole",
+    img: shoeGreen,
+    swatchHex: "#224131",
+    borderHex: "#3f6e54",
+    label: "Racing Green",
+    number: "112 / 200",
+  },
+  {
+    id: "oxblood" as const,
+    slug: "the-chancellor",
+    name: "Chancellor",
+    sub: "Series II · 150 Pairs Worldwide · € 980",
+    tagline: "Museum box calf · Smoked rubber · Hand-sponged patina",
+    img: shoeBurgundy,
+    swatchHex: "#451620",
+    borderHex: "#7e2a3b",
+    label: "Oxblood Calf",
+    number: "007 / 150",
+  },
+];
 
 const Hero = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -11,7 +53,10 @@ const Hero = () => {
 
   const [scrollVal, setScrollVal] = useState(0);
   const [use3D, setUse3D] = useState(true);
+  const [selectedEditionId, setSelectedEditionId] = useState<"ivory" | "green" | "oxblood">("ivory");
   const [mouseCoord, setMouseCoord] = useState({ x: 0, y: 0 });
+
+  const currentEdition = heroEditions.find((e) => e.id === selectedEditionId) || heroEditions[0];
 
   // Bind spring-smoothed scroll value
   useMotionValueEvent(p, "change", (latest) => {
@@ -51,23 +96,51 @@ const Hero = () => {
     <section ref={ref} className="relative h-[300vh]" onMouseMove={handleMouseMove}>
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden bg-vignette">
         {/* Ambient Top Title */}
-        <motion.div style={{ y: titleY, opacity: titleOpacity }} className="pointer-events-none absolute inset-x-0 top-[14%] text-center z-10">
-          <motion.p initial={{ opacity: 0, letterSpacing: "1em" }} animate={{ opacity: 1, letterSpacing: "0.35em" }} transition={{ duration: 2 }} className="kicker mb-4">Series VII · 350 Pairs Worldwide</motion.p>
-          <h1 className="font-serif text-[15vw] leading-[0.85] md:text-[10vw]">
-            {"Sovereign".split("").map((c, i) => (
-              <motion.span key={i} className="inline-block" initial={{ opacity: 0, y: 80, rotateX: -90 }} animate={{ opacity: 1, y: 0, rotateX: 0 }} transition={{ delay: 0.3 + i * 0.06, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}>{c}</motion.span>
-            ))}
-          </h1>
-          <p className="mt-1 font-serif text-xl italic text-muted-foreground md:text-2xl">quietly, since 1924</p>
+        <motion.div style={{ y: titleY, opacity: titleOpacity }} className="pointer-events-none absolute inset-x-0 top-[14%] text-center z-10 px-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentEdition.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="kicker mb-3">{currentEdition.sub}</p>
+              <h1 className="font-serif text-[15vw] leading-[0.85] md:text-[9.5vw] tracking-tight">
+                {currentEdition.name.split("").map((c, i) => (
+                  <motion.span
+                    key={`${currentEdition.id}-${i}`}
+                    className="inline-block"
+                    initial={{ opacity: 0, y: 50, rotateX: -90 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ delay: 0.1 + i * 0.04, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {c}
+                  </motion.span>
+                ))}
+              </h1>
+              <p className="mt-1 font-serif text-lg italic text-muted-foreground md:text-2xl">quietly, since 1924</p>
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
 
         {/* Ambient Bottom Tagline */}
-        <motion.div style={{ opacity: word2, y: word2Y }} className="pointer-events-none absolute inset-x-0 bottom-[10%] text-center z-10">
-          <p className="kicker mb-2">Tuscan calfskin · Hand-burnished · Gum sole</p>
-          <p className="font-serif text-3xl md:text-5xl">Made <em className="text-gold">by hand</em>, never in haste.</p>
+        <motion.div style={{ opacity: word2, y: word2Y }} className="pointer-events-none absolute inset-x-0 bottom-[10%] text-center z-10 px-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentEdition.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4 }}
+            >
+              <p className="kicker mb-2">{currentEdition.tagline}</p>
+              <p className="font-serif text-2xl md:text-5xl">Made <em className="text-gold">by hand</em>, never in haste.</p>
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
 
-        {/* Central Display: 3D Canvas or 2D Archival Scan (Prominently enlarged) */}
+        {/* Central Display: 3D Canvas or 2D Archival Scan */}
         <div className="relative mt-12 w-[95vw] max-w-5xl h-[72vh] flex items-center justify-center">
           {use3D ? (
             <div className="relative h-full w-full">
@@ -75,30 +148,74 @@ const Hero = () => {
                 scrollProgress={scrollVal}
                 mouseX={mouseCoord.x}
                 mouseY={mouseCoord.y}
+                variant={selectedEditionId}
                 className="h-full w-full"
               />
             </div>
           ) : (
             <div style={{ perspective: 1400 }} className="relative w-full max-w-2xl">
               <motion.div style={{ rotateX: ty, rotateY: tx }} className="preserve-3d">
-                <motion.img
-                  src={shoe} alt="Aurelia Sovereign sneaker in ivory calfskin" width={1536} height={1024}
-                  initial={{ opacity: 0, x: 300, rotate: 25 }} animate={{ opacity: 1, x: 0, rotate: 0 }} transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-                  style={{ rotateY, rotateX, rotateZ, scale, y }}
-                  className="relative z-10 w-full drop-shadow-[0_40px_40px_hsl(var(--background))]"
-                />
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentEdition.id}
+                    src={currentEdition.img}
+                    alt={`Aurelia ${currentEdition.name} sneaker in ${currentEdition.label}`}
+                    width={1536}
+                    height={1024}
+                    initial={{ opacity: 0, scale: 0.92, rotate: 10 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, scale: 1.05 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ rotateY, rotateX, rotateZ, scale, y }}
+                    className="relative z-10 w-full drop-shadow-[0_40px_40px_hsl(var(--background))]"
+                  />
+                </AnimatePresence>
               </motion.div>
               <motion.div style={{ scaleX: shadowScale }} className="mx-auto -mt-10 h-8 w-2/3 rounded-[50%] bg-primary/20 blur-2xl" />
             </div>
           )}
 
-          {/* Mode Switcher Toggle */}
+          {/* Colorway & Edition Selector Pills (Top-Left) */}
+          <div className="absolute top-2 left-4 z-20 flex flex-wrap items-center gap-1.5 border border-border bg-card/85 backdrop-blur p-1 text-[0.65rem] kicker">
+            <span className="text-muted-foreground px-1.5 hidden sm:inline">Edition:</span>
+            {heroEditions.map((ed) => {
+              const isSelected = selectedEditionId === ed.id;
+              return (
+                <button
+                  key={ed.id}
+                  onClick={() => setSelectedEditionId(ed.id)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 transition-all ${
+                    isSelected
+                      ? "bg-primary text-background font-bold shadow-gold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
+                  }`}
+                  aria-label={`Select ${ed.name} ${ed.label}`}
+                >
+                  <span
+                    className="h-2.5 w-2.5 rounded-full border"
+                    style={{ backgroundColor: ed.swatchHex, borderColor: ed.borderHex }}
+                  />
+                  <span>{ed.label}</span>
+                </button>
+              );
+            })}
+            <Link
+              to={`/editions/${currentEdition.slug}`}
+              className="hidden lg:flex items-center gap-1 px-2 py-1 text-primary hover:underline border-l border-border ml-1"
+            >
+              <span>Explore</span>
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {/* Mode Switcher Toggle (Top-Right) */}
           <div className="absolute top-2 right-4 z-20 flex items-center border border-border bg-card/85 backdrop-blur p-1 text-[0.65rem] kicker">
             <button
               onClick={() => setUse3D(true)}
               className={`flex items-center gap-1 px-2.5 py-1 transition-colors ${
                 use3D ? "bg-primary text-background font-bold shadow-gold" : "text-muted-foreground hover:text-foreground"
               }`}
+              aria-label="3D Model View"
             >
               <Box className="h-3.5 w-3.5" />
               <span>3D Model</span>
@@ -108,6 +225,7 @@ const Hero = () => {
               className={`flex items-center gap-1 px-2.5 py-1 transition-colors ${
                 !use3D ? "bg-primary text-background font-bold shadow-gold" : "text-muted-foreground hover:text-foreground"
               }`}
+              aria-label="2D Scan View"
             >
               <Layers className="h-3.5 w-3.5" />
               <span>2D Scan</span>

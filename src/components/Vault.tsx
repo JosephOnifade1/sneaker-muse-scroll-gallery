@@ -5,10 +5,13 @@ import green from "@/assets/shoe-green.png";
 import burgundy from "@/assets/shoe-burgundy.png";
 import Reveal from "./Reveal";
 
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
+
 const items = [
-  { name: "The Sovereign", sub: "Ivory calf · Gum", price: "€ 890", img: ivory, ed: "No. 041 / 350" },
-  { name: "The Regatta", sub: "Racing green suede", price: "€ 940", img: green, ed: "No. 112 / 200" },
-  { name: "The Chancellor", sub: "Oxblood box calf", price: "€ 980", img: burgundy, ed: "No. 007 / 150" },
+  { name: "The Sovereign", slug: "the-sovereign", sub: "Ivory calf · Gum", price: "€ 890", img: ivory, ed: "No. 041 / 350" },
+  { name: "The Regatta", slug: "the-regatta", sub: "Racing green suede", price: "€ 940", img: green, ed: "No. 112 / 200" },
+  { name: "The Chancellor", slug: "the-chancellor", sub: "Oxblood box calf", price: "€ 980", img: burgundy, ed: "No. 007 / 150" },
 ];
 
 const Card = ({ it, i }: { it: (typeof items)[0]; i: number }) => {
@@ -25,19 +28,30 @@ const Card = ({ it, i }: { it: (typeof items)[0]; i: number }) => {
       style={{ perspective: 1000 }}
       className="group"
     >
-      <motion.div
-        onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); mx.set((e.clientX - r.left) / r.width); my.set((e.clientY - r.top) / r.height); }}
-        onMouseLeave={() => { mx.set(0.5); my.set(0.5); }}
-        style={{ rotateX: rX, rotateY: rY }}
-        className="preserve-3d relative border bg-card p-8 transition-shadow duration-700 hover:shadow-gold"
-      >
-        <div className="flex justify-between kicker text-muted-foreground"><span>{it.ed}</span><span>Archive</span></div>
-        <motion.img style={{ x: imgX, translateZ: 80 }} src={it.img} alt={it.name} loading="lazy" width={1024} height={1024} className="my-6 aspect-square w-full object-contain transition-transform duration-700 group-hover:-rotate-6 group-hover:scale-110" />
-        <div style={{ transform: "translateZ(40px)" }} className="flex items-end justify-between border-t pt-6">
-          <div><h3 className="font-serif text-3xl">{it.name}</h3><p className="mt-1 text-sm text-muted-foreground">{it.sub}</p></div>
-          <span className="font-serif text-2xl text-primary">{it.price}</span>
-        </div>
-      </motion.div>
+      <Link to={`/editions/${it.slug}`} className="block">
+        <motion.div
+          onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); mx.set((e.clientX - r.left) / r.width); my.set((e.clientY - r.top) / r.height); }}
+          onMouseLeave={() => { mx.set(0.5); my.set(0.5); }}
+          style={{ rotateX: rX, rotateY: rY }}
+          className="preserve-3d relative border bg-card p-8 transition-all duration-700 hover:shadow-gold hover:border-primary/60 cursor-pointer"
+        >
+          <div className="flex justify-between kicker text-muted-foreground">
+            <span>{it.ed}</span>
+            <span className="flex items-center gap-1 text-primary group-hover:underline underline-offset-4">
+              <span>Explore</span>
+              <ArrowUpRight className="h-3 w-3" />
+            </span>
+          </div>
+          <motion.img style={{ x: imgX, translateZ: 80 }} src={it.img} alt={it.name} loading="lazy" width={1024} height={1024} className="my-6 aspect-square w-full object-contain transition-transform duration-700 group-hover:-rotate-6 group-hover:scale-110" />
+          <div style={{ transform: "translateZ(40px)" }} className="flex items-end justify-between border-t pt-6">
+            <div>
+              <h3 className="font-serif text-3xl group-hover:text-primary transition-colors">{it.name}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{it.sub}</p>
+            </div>
+            <span className="font-serif text-2xl text-primary">{it.price}</span>
+          </div>
+        </motion.div>
+      </Link>
     </motion.article>
   );
 };

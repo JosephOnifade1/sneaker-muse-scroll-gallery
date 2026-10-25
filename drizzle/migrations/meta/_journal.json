@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792889775636,
+      "tag": "0000_create_reservation_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792889813509,
+      "tag": "0001_create_salon_requests",
+      "breakpoints": true
+    }
+  ]
+}

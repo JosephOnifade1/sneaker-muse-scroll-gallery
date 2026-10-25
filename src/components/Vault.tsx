@@ -1,21 +1,21 @@
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import ivory from "@/assets/hero-shoe.png";
 import green from "@/assets/shoe-green.png";
 import burgundy from "@/assets/shoe-burgundy.png";
 import Reveal from "./Reveal";
 
 const items = [
-  { name: "The Sovereign", sub: "Ivory calf · Gum", price: "€ 890", img: ivory, ed: "No. 041 / 350" },
-  { name: "The Regatta", sub: "Racing green suede", price: "€ 940", img: green, ed: "No. 112 / 200" },
-  { name: "The Chancellor", sub: "Oxblood box calf", price: "€ 980", img: burgundy, ed: "No. 007 / 150" },
+  { name: "The Sovereign", sub: "Ivory calf · Gum", price: "€ 890", img: ivory, ed: "No. 041 / 350", slug: "the-sovereign" },
+  { name: "The Regatta", sub: "Racing green suede", price: "€ 940", img: green, ed: "No. 112 / 200", slug: "the-regatta" },
+  { name: "The Chancellor", sub: "Oxblood box calf", price: "€ 980", img: burgundy, ed: "No. 007 / 150", slug: "the-chancellor" },
 ];
 
 const Card = ({ it, i }: { it: (typeof items)[0]; i: number }) => {
-  const mx = useMotionValue(0.5), my = useMotionValue(0.5);
-  const rX = useSpring(useTransform(my, [0, 1], [14, -14]), { stiffness: 150, damping: 15 });
-  const rY = useSpring(useTransform(mx, [0, 1], [-14, 14]), { stiffness: 150, damping: 15 });
-  const imgX = useTransform(mx, [0, 1], [-20, 20]);
+  const mx = motion.useMotionValue(0.5), my = motion.useMotionValue(0.5);
+  const rX = motion.useSpring(motion.useTransform(my, [0, 1], [14, -14]), { stiffness: 150, damping: 15 });
+  const rY = motion.useSpring(motion.useTransform(mx, [0, 1], [-14, 14]), { stiffness: 150, damping: 15 });
+  const imgX = motion.useTransform(mx, [0, 1], [-20, 20]);
   return (
     <motion.article
       initial={{ opacity: 0, y: 120, rotateX: 35 }}
@@ -54,7 +54,13 @@ const Vault = () => {
           <p className="kicker mb-4">Current Allocations</p>
           <h2 className="font-serif text-5xl leading-tight md:text-7xl">Three pairs. <em className="text-gold">No restocks.</em></h2>
         </Reveal>
-        <div className="grid gap-10 md:grid-cols-3">{items.map((it, i) => <Card key={it.name} it={it} i={i} />)}</div>
+        <div className="grid gap-10 md:grid-cols-3">
+          {items.map((it, i) => (
+            <Link key={it.slug} to={`/editions/${it.slug}`} aria-label={`${it.name} — view the edition`} className="block">
+              <Card it={it} i={i} />
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

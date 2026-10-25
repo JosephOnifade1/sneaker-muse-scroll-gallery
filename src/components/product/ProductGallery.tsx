@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Maximize2, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
+import { Maximize2, X, ChevronLeft, ChevronRight, Eye, Box, Image as ImageIcon } from "lucide-react";
 import type { GalleryItem } from "@/data/editions";
+import { Sneaker3DCanvas } from "@/components/Sneaker3DCanvas";
 
 interface ProductGalleryProps {
   items: GalleryItem[];
@@ -11,15 +12,26 @@ interface ProductGalleryProps {
 
 export const ProductGallery = ({ items, shoeName, editionNumber }: ProductGalleryProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [is3DMode, setIs3DMode] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const current = items[activeIndex] || items[0];
 
   const handlePrev = () => {
+    if (is3DMode) {
+      setIs3DMode(false);
+      setActiveIndex(items.length - 1);
+      return;
+    }
     setActiveIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
+    if (is3DMode) {
+      setIs3DMode(false);
+      setActiveIndex(0);
+      return;
+    }
     setActiveIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1));
   };
 
@@ -39,46 +51,78 @@ export const ProductGallery = ({ items, shoeName, editionNumber }: ProductGaller
             {editionNumber}
           </span>
           <span className="hidden sm:inline-block font-sans text-xs text-muted-foreground/90 tracking-widest uppercase">
-            {current.title}
+            {is3DMode ? "Real-time 3D View" : current.title}
           </span>
         </div>
 
-        {/* Zoom Lightbox Trigger */}
-        <button
-          onClick={() => setIsLightboxOpen(true)}
-          className="absolute top-4 right-4 z-10 flex items-center gap-1.5 border border-border bg-background/80 px-2.5 py-1 text-xs text-muted-foreground backdrop-blur transition-colors hover:text-primary hover:border-primary/50"
-          aria-label="Inspect high resolution"
-        >
-          <Maximize2 className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline text-[0.68rem] uppercase tracking-wider">Inspect</span>
-        </button>
-
-        {/* Active Image Showcase with Motion */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.03 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="flex h-full w-full items-center justify-center p-6 sm:p-12"
+        {/* Mode switchers & Zoom trigger */}
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          <button
+            onClick={() => setIs3DMode(!is3DMode)}
+            className={`flex items-center gap-1.5 border px-2.5 py-1 text-xs backdrop-blur transition-all ${
+              is3DMode
+                ? "border-primary bg-primary text-background font-bold shadow-gold"
+                : "border-border bg-background/80 text-muted-foreground hover:text-primary hover:border-primary/50"
+            }`}
+            aria-label="Toggle 3D Mode"
           >
-            <img
-              src={current.src}
-              alt={`${shoeName} - ${current.title}`}
-              className="max-h-full max-w-full object-contain filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 group-hover:scale-105"
+            <Box className="h-3.5 w-3.5" />
+            <span className="text-[0.68rem] uppercase tracking-wider">
+              {is3DMode ? "3D Active" : "3D Orbit"}
+            </span>
+          </button>
+
+          {!is3DMode && (
+            <button
+              onClick={() => setIsLightboxOpen(true)}
+              className="flex items-center gap-1.5 border border-border bg-background/80 px-2.5 py-1 text-xs text-muted-foreground backdrop-blur transition-colors hover:text-primary hover:border-primary/50"
+              aria-label="Inspect high resolution"
+            >
+              <Maximize2 className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline text-[0.68rem] uppercase tracking-wider">Inspect</span>
+            </button>
+          )}
+        </div>
+
+        {/* Active Showcase */}
+        {is3DMode ? (
+          <div className="h-full w-full p-4">
+            <Sneaker3DCanvas
+              interactive={true}
+              className="h-full w-full"
             />
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.id}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.03 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="flex h-full w-full items-center justify-center p-6 sm:p-12"
+            >
+              <img
+                src={current.src}
+                alt={`${shoeName} - ${current.title}`}
+                className="max-h-full max-w-full object-contain filter drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 group-hover:scale-105"
+              />
+            </motion.div>
+          </AnimatePresence>
+        )}
 
         {/* Bottom Caption Overlay */}
         <div className="absolute bottom-4 left-4 right-4 z-10 flex items-end justify-between pointer-events-none">
           <div className="bg-background/85 backdrop-blur px-3 py-1.5 border border-border max-w-[85%]">
-            <p className="font-serif text-sm italic text-foreground/90">{current.title}</p>
-            <p className="text-[0.72rem] text-muted-foreground tracking-wide font-sans">{current.subtitle}</p>
+            <p className="font-serif text-sm italic text-foreground/90">
+              {is3DMode ? "Interactive 3D Last" : current.title}
+            </p>
+            <p className="text-[0.72rem] text-muted-foreground tracking-wide font-sans">
+              {is3DMode ? "Click and drag to rotate 360°" : current.subtitle}
+            </p>
           </div>
           <span className="kicker text-[0.65rem] text-muted-foreground/80 hidden sm:inline">
-            0{activeIndex + 1} / 0{items.length}
+            {is3DMode ? "3D Model" : `0${activeIndex + 1} / 0${items.length}`}
           </span>
         </div>
 
@@ -100,13 +144,34 @@ export const ProductGallery = ({ items, shoeName, editionNumber }: ProductGaller
       </div>
 
       {/* Thumbnails Selector */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-5 gap-3">
+        {/* 3D Model thumbnail */}
+        <button
+          onClick={() => setIs3DMode(true)}
+          className={`relative aspect-square overflow-hidden border p-2 bg-card text-left transition-all duration-300 flex flex-col items-center justify-center gap-1.5 ${
+            is3DMode
+              ? "border-primary ring-1 ring-primary/40 shadow-gold bg-primary/10 text-primary"
+              : "border-border/70 opacity-70 hover:opacity-100 hover:border-border text-muted-foreground"
+          }`}
+        >
+          <Box className="h-6 w-6 text-primary" />
+          <span className="font-sans text-[0.6rem] uppercase tracking-widest font-bold">
+            3D Orbit
+          </span>
+          {is3DMode && (
+            <div className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-primary" />
+          )}
+        </button>
+
         {items.map((it, idx) => {
-          const isActive = idx === activeIndex;
+          const isActive = !is3DMode && idx === activeIndex;
           return (
             <button
               key={it.id}
-              onClick={() => setActiveIndex(idx)}
+              onClick={() => {
+                setIs3DMode(false);
+                setActiveIndex(idx);
+              }}
               className={`relative aspect-square overflow-hidden border p-2 bg-card text-left transition-all duration-300 ${
                 isActive
                   ? "border-primary ring-1 ring-primary/40 shadow-gold"
